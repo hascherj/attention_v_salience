@@ -180,14 +180,14 @@ if(trial.number_more=="2"){
       new_html += `<div id="UR">${trial.action.dont_act}</div>`;
 
       if (trial.number_fewer=="1"){
-        new_html += `<div id="LL">you sacrifice ${personal_identifier}${trial.number_fewer} ${trial.items.singular} near you </div>`;
+        new_html += `<div id="LL">you sacrifice ${personal_identifier}${number_fewer_words} ${trial.items.singular} near you </div>`;
       }else{
-        new_html += `<div id="LL">you sacrifice a group of ${personal_identifier}${trial.number_fewer} ${trial.items.plural}</div>`;
+        new_html += `<div id="LL">you sacrifice a group of ${personal_identifier}${number_fewer_wordsr} ${trial.items.plural}</div>`;
       }
       if(trial.number_more=="1"){
-        new_html += `<div id="LR">you let ${personal_identifier}${trial.number_more} ${trial.items.singular} die </div>`;
+        new_html += `<div id="LR">you let ${personal_identifier}${number_more_words} ${trial.items.singular} die </div>`;
       }else{
-        new_html += `<div id="LR">you let a group of ${personal_identifier}${trial.number_more} ${trial.items.plural} die </div>`;
+        new_html += `<div id="LR">you let a group of ${personal_identifier}${number_more_words} ${trial.items.plural} die </div>`;
       }
       new_html += '</div>';
         
@@ -205,15 +205,15 @@ new_html += `<div id="UR">${trial.action.act}</div>`;
 
 
 if(trial.number_more=="1"){
-  new_html += `<div id="LL">you let ${personal_identifier}${trial.number_more} ${trial.items.singular} die </div>`;
+  new_html += `<div id="LL">you let ${personal_identifier}${number_more_words} ${trial.items.singular} die </div>`;
 }else{
-  new_html += `<div id="LL">you let a group of ${personal_identifier}${trial.number_more} ${trial.items.plural} die </div>`;
+  new_html += `<div id="LL">you let a group of ${personal_identifier}${number_more_words} ${trial.items.plural} die </div>`;
 }
 
 if (trial.number_fewer=="1"){
-  new_html += `<div id="LR">you sacrifice ${personal_identifier}${trial.number_fewer} ${trial.items.singular} near you </div>`;
+  new_html += `<div id="LR">you sacrifice ${personal_identifier}${number_fewer_words} ${trial.items.singular} near you </div>`;
 }else{
-  new_html += `<div id="LR">you sacrifice a group of ${personal_identifier}${trial.number_fewer} ${trial.items.plural}</div>`;
+  new_html += `<div id="LR">you sacrifice a group of ${personal_identifier}${number_fewer_words} ${trial.items.plural}</div>`;
 }
 new_html += '</div>';
 
@@ -227,15 +227,15 @@ new_html += '</div>';
 // by pushing them towards the shark      by leaving them in the shark's path
 new_html += '<div class="grid-container">';
 if (trial.number_fewer=="1"){
-  new_html += `<div id="UL">you sacrifice ${personal_identifier}${trial.number_fewer} ${trial.items.singular} near you </div>`;
+  new_html += `<div id="UL">you sacrifice ${personal_identifier}${number_fewer_words} ${trial.items.singular} near you </div>`;
 }else{
-  new_html += `<div id="UL">you sacrifice a group of ${personal_identifier}${trial.number_fewer} ${trial.items.plural}</div>`;
+  new_html += `<div id="UL">you sacrifice a group of ${personal_identifier}${number_fewer_words} ${trial.items.plural}</div>`;
 }
 
 if(trial.number_more=="1"){
-  new_html += `<div id="UR">you let ${personal_identifier}${trial.number_more} ${trial.items.singular} die </div>`;
+  new_html += `<div id="UR">you let ${personal_identifier}${number_more_words} ${trial.items.singular} die </div>`;
 }else{
-  new_html += `<div id="UR">you let a group of ${personal_identifier}${trial.number_more} ${trial.items.plural} die </div>`;
+  new_html += `<div id="UR">you let a group of ${personal_identifier}${number_more_words} ${trial.items.plural} die </div>`;
 }
 
 new_html += `<div id="LL">${trial.action.act}</div>`;
@@ -253,15 +253,15 @@ new_html += '</div>';
 new_html += '<div class="grid-container">';
 
 if(trial.number_more=="1"){
-  new_html += `<div id="UL">you let ${personal_identifier}${trial.number_more} ${trial.items.singular} die </div>`;
+  new_html += `<div id="UL">you let ${personal_identifier}${number_more_words} ${trial.items.singular} die </div>`;
 }else{
-  new_html += `<div id="UL">you let a group of ${personal_identifier}${trial.number_more} ${trial.items.plural} die </div>`;
+  new_html += `<div id="UL">you let a group of ${personal_identifier}${number_more_words} ${trial.items.plural} die </div>`;
 }
 
 if (trial.number_fewer=="1"){
-  new_html += `<div id="UR">you sacrifice ${personal_identifier}${trial.number_fewer} ${trial.items.singular} near you </div>`;
+  new_html += `<div id="UR">you sacrifice ${personal_identifier}${number_fewer_words} ${trial.items.singular} near you </div>`;
 }else{
-  new_html += `<div id="UR">you sacrifice a group of ${trial.number_fewer} ${trial.items.plural}</div>`;
+  new_html += `<div id="UR">you sacrifice a group of ${number_fewer_words} ${trial.items.plural}</div>`;
 }
 new_html += `<div id="LL"> ${trial.action.dont_act} </div>`;
 new_html += `<div id="LR"> ${trial.action.act}</div>`;
