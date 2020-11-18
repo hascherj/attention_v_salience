@@ -738,7 +738,7 @@ var trials_Untimed_First = {
     choices_untimed, 
     breaktime, recalibration2, 
     instructions_RealTimed,
-  choices_times],
+  choices_timed],
 
   conditional_function: function(){
       if(timed_first == 0){
