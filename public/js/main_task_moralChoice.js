@@ -7,14 +7,15 @@
 /** Reminders **/
 /////////////////
 //turn on all timeline
-//put right conditions
-//turn off testing parameters
-//right number of trials, timeout secs
+//trials (=scenarios.length*2)
+//ratings_means
+//ratings_actions
+//ratings_items
 
 /**************/
 /** Constants */
 /**************/
-const ntrials = scenarios.length*2;  //there are 26 scenarios so loop through them twice
+const ntrials = 3;  //=scenarios.length*2
 const fixation_duration = 500;
 const npractice = 3;
 const nImageInst = 2;
@@ -867,7 +868,8 @@ var ratings_actions_task = {
       ratings_actions_counter++;
     }
 }],
-loop_function: () => ratings_actions_counter < distinctActions.length
+//loop_function: () => ratings_actions_counter < distinctActions.length
+loop_function: () => ratings_actions_counter < 3
 };
 
 
@@ -893,7 +895,8 @@ var ratings_means_task = {
       ratings_means_counter++;
     }
 }],
-loop_function: () => ratings_means_counter < distinctMeans.length
+//loop_function: () => ratings_means_counter < distinctMeans.length
+loop_function: () => ratings_means_counter < 3
 };
 
 var ratings_items_counter = 0;
@@ -912,7 +915,8 @@ var ratings_items_task = {
       ratings_items_counter++;
     }
   }],
-  loop_function: () => ratings_items_counter < items.length
+  //loop_function: () => ratings_items_counter < items.length
+  loop_function: () => ratings_items_counter < 3
 }
   
 
