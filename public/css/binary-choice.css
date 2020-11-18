@@ -1,10 +1,10 @@
 .grid-container {
     display: grid;
-    grid-template-columns: 40vw 40vw;
-    grid-template-rows: 20vh 20vh;
+    grid-template-columns: 45vw 45vw;
+    grid-template-rows: 15vh 15vh;
     align-content: center;
     justify-content: center;
-    grid-gap: 60vh 20vw;
+    grid-gap: 70vh 10vw;
     padding: 0;
   }
   

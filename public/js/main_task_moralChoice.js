@@ -568,12 +568,12 @@ var choices_untimed = {
       type: "binary-choice",
       on_start: function(){
         document.body.style.cursor = 'none';
-        console.log(scenarios[trial_order_untimed[trial_count_untimed]]);
-        console.log(number_fewer_untimed_vector[trial_count_untimed]);
-        console.log(number_more_untimed_vector[trial_count_untimed]);
-        console.log(act_side_untimed_vector[trial_count_untimed]);
-        console.log(items_to_use[items_to_use_order_vector_untimed[trial_count_untimed]]);
-        console.log(catch_trial_untimed[trial_count_untimed]);
+        //console.log(scenarios[trial_order_untimed[trial_count_untimed]]);
+        //console.log(number_fewer_untimed_vector[trial_count_untimed]);
+        //console.log(number_more_untimed_vector[trial_count_untimed]);
+        //console.log(act_side_untimed_vector[trial_count_untimed]);
+        //console.log(items_to_use[items_to_use_order_vector_untimed[trial_count_untimed]]);
+        //console.log(catch_trial_untimed[trial_count_untimed]);
         console.log(trial_count_untimed);
       },
       trial_number: () => trial_count_untimed+1,
@@ -698,14 +698,14 @@ var choices_timed = {
     {
       type: "binary-choice",
       on_start: function(){
-        document.body.style.cursor = 'none';
-        console.log(scenarios[trial_order_timed[trial_count_timed]]);
-        console.log(number_fewer_timed_vector[trial_count_timed]);
-        console.log(number_more_timed_vector[trial_count_timed]);
-        console.log(act_side_timed_vector[trial_count_timed]);
-        console.log(items_to_use[items_to_use_order_vector_timed[trial_count_timed]]);
-        console.log(catch_trial_timed[trial_count_timed]);
-        console.log(trial_count_untimed);
+        //document.body.style.cursor = 'none';
+        //console.log(scenarios[trial_order_timed[trial_count_timed]]);
+        //console.log(number_fewer_timed_vector[trial_count_timed]);
+        //console.log(number_more_timed_vector[trial_count_timed]);
+        //console.log(act_side_timed_vector[trial_count_timed]);
+        //console.log(items_to_use[items_to_use_order_vector_timed[trial_count_timed]]);
+        //console.log(catch_trial_timed[trial_count_timed]);
+        //console.log(trial_count_untimed);
       },
       trial_number: () => trial_count_timed+1,
       action: () =>   scenarios[trial_order_timed[trial_count_timed]],
@@ -737,7 +737,8 @@ var trials_Untimed_First = {
   timeline: [instructions_RealUntimed,
     choices_untimed, 
     breaktime, recalibration2, 
-    instructions_RealTimed],
+    instructions_RealTimed,
+  choices_times],
 
   conditional_function: function(){
       if(timed_first == 0){
