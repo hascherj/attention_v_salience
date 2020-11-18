@@ -83,6 +83,10 @@ var items_to_use = items.filter(obj => obj.negative == 0);
 //////////////////////////////
 
 var subject_id = jsPsych.randomization.randomID(7);
+var experiment_code = 'mc_';
+subject_id = experiment_code + subject_id;
+console.log(subject_id);
+
 
 var action_top = jsPsych.randomization.sampleWithoutReplacement([1,2], 1);
 //var action_top = 1;
@@ -280,12 +284,12 @@ var choiceOverview = {
 }
 
 
-instructions_ex0 = ["In the example below, a bear is charging toward a group of five professional athletes. There are two options for you: one shown on the left and one on the right. If you do nothing, the bear will maul these atheletes. But you can take the other action, push one athlete in front of the bear. If you do this, those 5 athletes will be saved.<br><br/>"+
-"You must decide what you SHOULD do if you were in this situation:  do nothing or push one profressional athlete in front of the bear.</br></br></br>"];
+instructions_ex0 = ["In the example below, a bear is charging toward a group of five professional athletes. There are two options for you: one shown on the left and one on the right. If you do nothing, the bear will maul these athletes. But you can take the other action, push one athlete in front of the bear. If you do this, those 5 athletes will be saved.<br><br/>"+
+"You must decide what you SHOULD do if you were in this situation:  do nothing or push one professional athlete in front of the bear.</br></br></br>"];
 instructions_ex1 = ["In the example below, poisonous gas is moving towards 200 butterflies. If you do nothing, the gas will poison these butterflies. But you can take the other action, push a button to divert the poison gas toward another group of 25 butterflies. If you do this, those 200 butterflies will be saved.<br><br/>"+
 "You must decide what you SHOULD do if you were in this situation:  do nothing or push the button to divert the poison gas.</br></br></br>"];
 instructions_ex2 = ["In the example below, a trolley is moving toward one military veteran. If you do nothing, the trolley will crush the veteran. But you can take the other action, pull a lever to divert the trolley toward a group of 4 military veterans. If you do this, then the 1 veteran will be saved.<br><br/>"+
-"You must decide what you SHOULD do if you were in this situation:  do nothing or push one profressional athlete in front of the bear.</br></br></br>"];
+"You must decide what you SHOULD do if you were in this situation:  do nothing or push one miliatry veteran in front of the bear.</br></br></br>"];
 
 if(action_top == 1){
 var instructions_examples = {

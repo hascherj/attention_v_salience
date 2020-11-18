@@ -194,7 +194,7 @@ scenarios = [
     "index": 20,
     "name": 'slit_throat',
     "act": 'by slitting their throat',
-    "dont_act": 'by allowing their throats\'s to be slit',
+    "dont_act": 'by allowing their throats\' to be slit',
     "means": 'blood loss from neck',
     "action": 'slit throat',
     "personal": 1,
