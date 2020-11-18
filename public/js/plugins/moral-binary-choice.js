@@ -138,9 +138,11 @@ if(trial.items.general==0){
   var personal_identifier = "";
 }
 
-var number_fewer_words; //[1,2,3,4,20]
-var number_more_words; //[2,5,10,50,100,200]
+var number_fewer_words; 
+var number_more_words; 
 
+
+//[1,2,3,4,5,10,20,50,100,200]
 //convert numbers to words 
 if(trial.number_fewer=="1"){
   number_fewer_words = "one";
@@ -150,22 +152,41 @@ if(trial.number_fewer=="1"){
   number_fewer_words = "three";
 }else if(trial.number_fewer=="4"){
   number_fewer_words = "four";
+}else if(trial.number_fewer=="5"){
+  number_fewer_words = "five";
+}else if(trial.number_fewer=="10"){
+  number_fewer_words = "ten";
 }else if(trial.number_fewer=="20"){
   number_fewer_words = "twenty";
-};
+}else if(trial.number_fewer=="50"){
+    number_fewer_words = "fifty";
+  }else if(trial.number_fewer=="100"){
+    number_fewer_words = "one-hundred";
+  }else if(trial.number_fewer=="200"){
+    number_fewer_words = "two-hundre";
+  };
 
-if(trial.number_more=="2"){
+  //[1,2,3,4,5,10,20,50,100,200]
+if(trial.number_more=="1"){
+  number_more_words = "one";
+}else if(trial.number_more=="2"){
   number_more_words = "two";
+}else if(trial.number_more=="3"){
+  number_more_words = "three";
+}else if(trial.number_more=="4"){
+  number_more_words = "four";
 }else if(trial.number_more=="5"){
   number_more_words = "five";
 }else if(trial.number_more=="10"){
   number_more_words = "ten";
+}else if(trial.number_more=="20"){
+  number_more_words = "twenty";
 }else if(trial.number_more=="50"){
   number_more_words = "fifty";
 }else if(trial.number_more=="100"){
-  number_more_words = "one hundred";
+  number_more_words = "one-hundred";
 }else if(trial.number_more=="200"){
-  number_more_words = "two hundred";
+  number_more_words = "two-hundred";
 };
 
 console.log(trial.number_fewer);
