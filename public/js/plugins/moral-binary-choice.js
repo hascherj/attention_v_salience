@@ -143,30 +143,33 @@ var number_more_words; //[2,5,10,50,100,200]
 
 //convert numbers to words 
 if(trial.number_fewer=="1"){
-  number_fewer_words == "one";
+  number_fewer_words = "one";
 }else if(trial.number_fewer=="2"){
-  number_fewer_words == "two";
+  number_fewer_words = "two";
 }else if(trial.number_fewer=="3"){
-  number_fewer_words == "three";
+  number_fewer_words = "three";
 }else if(trial.number_fewer=="4"){
-  number_fewer_words == "four";
+  number_fewer_words = "four";
 }else if(trial.number_fewer=="20"){
-  number_fewer_words == "twenty";
+  number_fewer_words = "twenty";
 };
 
 if(trial.number_more=="2"){
-  number_more_words == "one";
+  number_more_words = "one";
 }else if(trial.number_more=="5"){
-  number_more_words == "five";
+  number_more_words = "five";
 }else if(trial.number_more=="10"){
-  number_more_words == "ten";
+  number_more_words = "ten";
 }else if(trial.number_more=="50"){
-  number_more_words == "fifty";
+  number_more_words = "fifty";
 }else if(trial.number_more=="100"){
-  number_more_words == "one hundred";
+  number_more_words = "one hundred";
 }else if(trial.number_more=="200"){
-  number_more_words == "two hundred";
+  number_more_words = "two hundred";
 };
+
+console.log(number_fewer_words);
+console.log(number_more_words);
 
 
       if (action_top == 1 && trial.act_side == 1){
@@ -182,7 +185,7 @@ if(trial.number_more=="2"){
       if (trial.number_fewer=="1"){
         new_html += `<div id="LL">you sacrifice ${personal_identifier}${number_fewer_words} ${trial.items.singular} near you </div>`;
       }else{
-        new_html += `<div id="LL">you sacrifice a group of ${personal_identifier}${number_fewer_wordsr} ${trial.items.plural}</div>`;
+        new_html += `<div id="LL">you sacrifice a group of ${personal_identifier}${number_fewer_words} ${trial.items.plural}</div>`;
       }
       if(trial.number_more=="1"){
         new_html += `<div id="LR">you let ${personal_identifier}${number_more_words} ${trial.items.singular} die </div>`;

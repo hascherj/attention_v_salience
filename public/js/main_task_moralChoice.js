@@ -405,7 +405,7 @@ var prac_choice = {
       type: "moral-binary-choice",
       trial_number: () => prac_choice_count+1,
       action: () =>   scenarios_practice[prac_choice_count],
-      number_fewer: () => [1,25,4][prac_choice_count],
+      number_fewer: () => [1,20,4][prac_choice_count],
       number_more: () =>  [5,200,1][prac_choice_count],
       items: () => items_practice[prac_choice_count],
       action_top: action_top,
