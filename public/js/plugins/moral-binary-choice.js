@@ -3,13 +3,13 @@
  * type for params: BOOL, STRING, INT, FLOAT, FUNCTION, KEYCODE, SELECT, HTML_STRING, IMAGE, AUDIO, VIDEO, OBJECT, COMPLEX
  */
 
-jsPsych.plugins["binary-choice"] = (function () {
+jsPsych.plugins["moral-binary-choice"] = (function () {
 
   var plugin = {};
 
   plugin.info = {
 
-    name: "binary-choice",
+    name: "moral-binary-choice",
     parameters: {
       trial_number:{
         type: jsPsych.plugins.parameterType.INT,
@@ -137,6 +137,37 @@ if(trial.items.general==0){
 }else{
   var personal_identifier = "";
 }
+
+var number_fewer_words; //[1,2,3,4,20]
+var number_more_words; //[2,5,10,50,100,200]
+
+//convert numbers to words 
+if(trial.number_fewer=="1"){
+  number_fewer_words == "one";
+}else if(trial.number_fewer=="2"){
+  number_fewer_words == "two";
+}else if(trial.number_fewer=="3"){
+  number_fewer_words == "three";
+}else if(trial.number_fewer=="4"){
+  number_fewer_words == "four";
+}else if(trial.number_fewer=="20"){
+  number_fewer_words == "twenty";
+};
+
+if(trial.number_more=="2"){
+  number_more_words == "one";
+}else if(trial.number_more=="5"){
+  number_more_words == "five";
+}else if(trial.number_more=="10"){
+  number_more_words == "ten";
+}else if(trial.number_more=="50"){
+  number_more_words == "fifty";
+}else if(trial.number_more=="100"){
+  number_more_words == "one hundred";
+}else if(trial.number_more=="200"){
+  number_more_words == "two hundred";
+};
+
 
       if (action_top == 1 && trial.act_side == 1){
 //action on top & outcome on bottom

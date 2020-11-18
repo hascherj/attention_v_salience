@@ -402,7 +402,7 @@ var prac_choice = {
     
     fixation1,
     {
-      type: "binary-choice",
+      type: "moral-binary-choice",
       trial_number: () => prac_choice_count+1,
       action: () =>   scenarios_practice[prac_choice_count],
       number_fewer: () => [1,25,4][prac_choice_count],
@@ -541,16 +541,16 @@ var number_fewer_untimed_vector = [];
 var number_more_untimed_vector = [];
 
 for (let i = 0; i <= ntrials-1; i++) {
-  number_fewer_untimed_vector.push(jsPsych.randomization.sampleWithoutReplacement([1,2,3,4,25], 1));
+  number_fewer_untimed_vector.push(jsPsych.randomization.sampleWithoutReplacement([1,2,3,4,20], 1));
   if(number_fewer_untimed_vector[i]==1){
-    number_more_untimed_vector.push(jsPsych.randomization.sampleWithReplacement([2,5,10,20,50,100,200], 1))
+    number_more_untimed_vector.push(jsPsych.randomization.sampleWithReplacement([2,5,10,50,100,200], 1))
   }else if(number_fewer_untimed_vector[i]==2){
-    number_more_untimed_vector.push(jsPsych.randomization.sampleWithReplacement([5,10,20,50,100,200], 1))
+    number_more_untimed_vector.push(jsPsych.randomization.sampleWithReplacement([5,10,50,100,200], 1))
   }else if(number_fewer_untimed_vector[i]==3){
-    number_more_untimed_vector.push(jsPsych.randomization.sampleWithReplacement([5,10,20,50,100,200], 1))
+    number_more_untimed_vector.push(jsPsych.randomization.sampleWithReplacement([5,10,50,100,200], 1))
   }
   else if(number_fewer_untimed_vector[i]==4){
-    number_more_untimed_vector.push(jsPsych.randomization.sampleWithReplacement([5,10,20,50,100,200], 1))
+    number_more_untimed_vector.push(jsPsych.randomization.sampleWithReplacement([5,10,50,100,200], 1))
   }
   else{
     number_more_untimed_vector.push(jsPsych.randomization.sampleWithReplacement([50,100,200], 1))
@@ -566,7 +566,7 @@ var choices_untimed = {
     if_node1,
     if_node2,
     {
-      type: "binary-choice",
+      type: "moral-binary-choice",
       on_start: function(){
         document.body.style.cursor = 'none';
         //console.log(scenarios[trial_order_untimed[trial_count_untimed]]);
@@ -671,16 +671,16 @@ var number_fewer_timed_vector = [];
 var number_more_timed_vector = [];
 
 for (let i = 0; i <= ntrials-1; i++) {
-  number_fewer_timed_vector.push(jsPsych.randomization.sampleWithoutReplacement([1,2,3,4,25], 1));
+  number_fewer_timed_vector.push(jsPsych.randomization.sampleWithoutReplacement([1,2,3,4,20], 1));
   if(number_fewer_timed_vector[i]==1){
-    number_more_timed_vector.push(jsPsych.randomization.sampleWithReplacement([2,5,10,20,50,100,200], 1))
+    number_more_timed_vector.push(jsPsych.randomization.sampleWithReplacement([2,5,10,50,100,200], 1))
   }else if(number_fewer_timed_vector[i]==2){
-    number_more_timed_vector.push(jsPsych.randomization.sampleWithReplacement([5,10,20,50,100,200], 1))
+    number_more_timed_vector.push(jsPsych.randomization.sampleWithReplacement([5,10,50,100,200], 1))
   }else if(number_fewer_timed_vector[i]==3){
-    number_more_timed_vector.push(jsPsych.randomization.sampleWithReplacement([5,10,20,50,100,200], 1))
+    number_more_timed_vector.push(jsPsych.randomization.sampleWithReplacement([5,10,50,100,200], 1))
   }
   else if(number_fewer_timed_vector[i]==4){
-    number_more_timed_vector.push(jsPsych.randomization.sampleWithReplacement([5,10,20,50,100,200], 1))
+    number_more_timed_vector.push(jsPsych.randomization.sampleWithReplacement([5,10,50,100,200], 1))
   }
   else{
     number_more_timed_vector.push(jsPsych.randomization.sampleWithReplacement([50,100,200], 1))
@@ -697,7 +697,7 @@ var choices_timed = {
     if_node1,
     if_node2,
     {
-      type: "binary-choice",
+      type: "moral-binary-choice",
       on_start: function(){
         //document.body.style.cursor = 'none';
         //console.log(scenarios[trial_order_timed[trial_count_timed]]);
@@ -981,8 +981,8 @@ var debriefing_page = {
     screen_id: "debriefing page"
   },
   type: "instructions",
-  pages: ["The study that you have just completed is concerned with how people make moral decisions in different hypothetical scenarios.  Specifically, we are interested in under which conditions people think it is morally permissible to take an action that will harm fewer people.  Across the different scenarios, we used different means of death (e.g., lion, gunman, etc.) and different actions you might have to take (e.g. performing surgery, pushing a button, pushing the person).  We are investigating whether these different factors influence decisions."+
-  "We were also interested in seeing how people’s decisions change when are asked to make these decisions quickly.  Would they focus more on certain aspects of the decision than others?  We use eye-tracking to determine where people are looking as a proxy for what aspects of the decision they are considering at that moment."+
+  pages: ["The study that you have just completed is concerned with how people make moral decisions in different hypothetical scenarios.  Specifically, we are interested in under which conditions people think it is morally permissible to take an action that will harm fewer people.  Across the different scenarios, we used different means of death (e.g., lion, gunman, etc.) and different actions you might have to take (e.g. performing surgery, pushing a button, pushing the person).  We are investigating whether these different factors influence decisions.</br></br>"+
+  "We were also interested in seeing how people’s decisions change when are asked to make these decisions quickly.  Would they focus more on certain aspects of the decision than others?  We use eye-tracking to determine where people are looking as a proxy for what aspects of the decision they are considering at that moment.</br></br>"+
   "If you have any questions, concerns, or complaints about this set of studies, you may contact Dr. Ian Krajbich of The Ohio State University at krajbich.1@osu.edu. For questions about your rights as a participant in this study or to discuss other study-related concerns or complaints with someone who is not part of the research team, you may contact Ms. Sandra Meadows in the Office of Responsible Research Practices at 1-800-678-6251.",],
   allow_backward: false, 
   key_forward: 'spacebar'
