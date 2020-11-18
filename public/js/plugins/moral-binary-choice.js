@@ -155,7 +155,7 @@ if(trial.number_fewer=="1"){
 };
 
 if(trial.number_more=="2"){
-  number_more_words = "one";
+  number_more_words = "two";
 }else if(trial.number_more=="5"){
   number_more_words = "five";
 }else if(trial.number_more=="10"){
@@ -168,7 +168,10 @@ if(trial.number_more=="2"){
   number_more_words = "two hundred";
 };
 
+console.log(trial.number_fewer);
 console.log(number_fewer_words);
+
+console.log(trial.number_more);
 console.log(number_more_words);
 
 
