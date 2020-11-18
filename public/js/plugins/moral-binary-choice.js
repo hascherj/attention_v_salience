@@ -163,7 +163,7 @@ if(trial.number_fewer=="1"){
   }else if(trial.number_fewer=="100"){
     number_fewer_words = "one-hundred";
   }else if(trial.number_fewer=="200"){
-    number_fewer_words = "two-hundre";
+    number_fewer_words = "two-hundred";
   };
 
   //[1,2,3,4,5,10,20,50,100,200]

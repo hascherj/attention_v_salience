@@ -1057,7 +1057,7 @@ function startExperiment() {
      trials_Timed_First,
      ratings_overview,
      ratings_actions_items_means, ratings_means_items_actions,
-     demographic_survey,
+     //demographic_survey,
     debriefing_page,
 
     success_guard
