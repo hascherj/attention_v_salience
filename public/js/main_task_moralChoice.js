@@ -15,7 +15,7 @@
 /**************/
 /** Constants */
 /**************/
-const ntrials = 3;  //=scenarios.length*2
+const ntrials = 4;  //=scenarios.length*2
 const fixation_duration = 500;
 const npractice = 3;
 const nImageInst = 2;
