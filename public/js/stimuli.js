@@ -221,7 +221,7 @@ scenarios = [
   {
     "index": 23,
     "name": 'missle',
-    "act": 'by diverting their plan to block the missle',
+    "act": 'by diverting their plane to block the missle',
     "dont_act": 'by leaving them in the missle\'s path',
     "means": 'plane explosion from missle',
     "action": 'divert missles',

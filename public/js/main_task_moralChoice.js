@@ -66,7 +66,7 @@ function uploadSubjectStatus(status) {
 
 var instruct_img = [];
 for (var i = 0; i < nImageInst; i++) {
-  instruct_img.push('img/instruct' + i + '.png');
+  instruct_img.push('img/instruct' + i + '.jpg');
 }
 
 var practice_images = [];
@@ -558,8 +558,7 @@ for (let i = 0; i <= ntrials-1; i++) {
 
 var catch_trial_untimed = jsPsych.randomization.shuffle(Array(ntrials-5).fill(1).concat(Array(5).fill(0)))
 
-
-
+var items_to_use_order_vector_untimed = jsPsych.randomization.shuffle(Array.from(Array(items_to_use.length).keys()));
 
 var choices_untimed = {
   timeline: [ 
@@ -567,12 +566,21 @@ var choices_untimed = {
     if_node2,
     {
       type: "binary-choice",
-      on_start: () => document.body.style.cursor = 'none',
+      on_start: function(){
+        document.body.style.cursor = 'none';
+        console.log(scenarios[trial_order_untimed[trial_count_untimed]]);
+        console.log(number_fewer_untimed_vector[trial_count_untimed]);
+        console.log(number_more_untimed_vector[trial_count_untimed]);
+        console.log(act_side_untimed_vector[trial_count_untimed]);
+        console.log(items_to_use[items_to_use_order_vector_untimed[trial_count_untimed]]);
+        console.log(catch_trial_untimed[trial_count_untimed]);
+        console.log(trial_count_untimed);
+      },
       trial_number: () => trial_count_untimed+1,
       action: () =>   scenarios[trial_order_untimed[trial_count_untimed]],
       number_fewer: () => number_fewer_untimed_vector[trial_count_untimed],
       number_more: () => number_more_untimed_vector[trial_count_untimed],
-      items: () => items_to_use[getRandomInt(0,items_to_use.length-1)],
+      items: () => items_to_use[items_to_use_order_vector_untimed[trial_count_untimed]],
       action_top: action_top,
       act_side: () => act_side_untimed_vector[trial_count_untimed],
       choices: ["F", "J"],
@@ -680,6 +688,8 @@ for (let i = 0; i <= ntrials-1; i++) {
 
 var catch_trial_timed = jsPsych.randomization.shuffle(Array(ntrials-5).fill(1).concat(Array(5).fill(0)))
 
+var items_to_use_order_vector_timed = jsPsych.randomization.shuffle(Array.from(Array(items_to_use.length).keys()));
+
 
 var choices_timed = {
   timeline: [ 
@@ -687,12 +697,21 @@ var choices_timed = {
     if_node2,
     {
       type: "binary-choice",
-      on_start: () => document.body.style.cursor = 'none',
+      on_start: function(){
+        document.body.style.cursor = 'none';
+        console.log(scenarios[trial_order_timed[trial_count_timed]]);
+        console.log(number_fewer_timed_vector[trial_count_timed]);
+        console.log(number_more_timed_vector[trial_count_timed]);
+        console.log(act_side_timed_vector[trial_count_timed]);
+        console.log(items_to_use[items_to_use_order_vector_timed[trial_count_timed]]);
+        console.log(catch_trial_timed[trial_count_timed]);
+        console.log(trial_count_untimed);
+      },
       trial_number: () => trial_count_timed+1,
       action: () =>   scenarios[trial_order_timed[trial_count_timed]],
       number_fewer: () => number_fewer_timed_vector[trial_count_timed],
       number_more: () => number_more_timed_vector[trial_count_timed],
-      items: () => items_to_use[getRandomInt(0,items_to_use.length)-1],
+      items: () => items_to_use[items_to_use_order_vector_timed[trial_count_timed]],
       action_top: action_top,
       act_side: () => act_side_timed_vector[trial_count_timed],
       choices: ["F", "J"],
@@ -1047,7 +1066,7 @@ function startExperiment() {
       Thank you for your participation! You can close the browser to end the experiment now. </br>
                   The webcam will turn off when you close the browser. </div>`);
       }
-      if (trialcounter == 40) {
+      if (trialcounter == 10) {
         on_finish_callback();
         jsPsych.data.reset();
       }
