@@ -3,8 +3,8 @@ scenarios = [
   {
     "index": 0,
     "name": 'elevator_personal',
-    "act": 'by throwing them into the elevator cogs',
-    "dont_act": 'by allowing them to fall into the elevator cogs',
+    "act": 'by throwing them into elevator cogs',
+    "dont_act": 'by allowing them to fall into elevator cogs',
     "means": 'crushed by elevator cogs',
     "action": 'throw a person',
     "personal": 1,
@@ -12,8 +12,8 @@ scenarios = [
   {
     "index": 1,
     "name": 'elevator_impersonal',
-    "act": 'by pulling a cord to drop them into the elevator cogs',
-    "dont_act": 'by allowing them to fall into the elevator cogs',
+    "act": 'by pulling a cord to drop them into elevator cogs',
+    "dont_act": 'by allowing them to fall into elevator cogs',
     "means": 'crushed by elevator cogs',
     "action": 'pull a cord',
     "personal": 0,

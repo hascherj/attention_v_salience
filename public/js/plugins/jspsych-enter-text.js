@@ -25,6 +25,12 @@ jsPsych.plugins['enter-text'] = (function() {
         default: undefined,
         description: 'Any content here will be displayed below the slider.'
       },
+      required: {
+        type: jsPsych.plugins.parameterType.BOOL,
+        pretty_name: 'is a response required',
+        default: true,
+        description: 'if the prompt is required to advance'
+      },
       stimulus_duration: {
         type: jsPsych.plugins.parameterType.INT,
         pretty_name: 'Stimulus duration',
@@ -55,7 +61,9 @@ jsPsych.plugins['enter-text'] = (function() {
     html += '</br>';
 
     var autofocus = 0 == 0 ? "autofocus" : "";
-    html += '<input type="text" id="input"  name="#jspsych-survey-text-response" data-name="data" size="50" '+autofocus+'  placeholder=" enter number here"></input>';
+    var req = true ? "required" : "";
+
+    html += '<input type="text" id="input"  name="#jspsych-survey-text-response" data-name="data" size="50" '+autofocus+' '+req+' placeholder=" enter number here"></input>';
 
 
     html += '</br>';

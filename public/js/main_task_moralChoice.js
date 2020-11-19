@@ -15,7 +15,7 @@
 /**************/
 /** Constants */
 /**************/
-const ntrials = 10;  //=scenarios.length*2
+const ntrials = scenarios.length*2;
 const fixation_duration = 500;
 const npractice = 3;
 const nImageInst = 2;
@@ -76,7 +76,7 @@ for (var i = 0; i <= npractice*2-1; i++) {
 }
 
 
-//only use general items and non-negative items (ie pedophiles)
+//only use non-negative items (ie dont include pedophiles)
 var items_to_use = items.filter(obj => obj.negative == 0);
 
 ///////////////////////////////
@@ -90,7 +90,7 @@ console.log(subject_id);
 
 
 var action_top = jsPsych.randomization.sampleWithoutReplacement([1,2], 1);
-//var action_top = 1;
+//var action_top = 2;
 
 //if the untimed is first, or timed is first
 var timed_first = jsPsych.randomization.sampleWithoutReplacement([0,1], 1);
@@ -121,9 +121,9 @@ var fullscreenEnter = {
   message: `<div> 
   Welcome to the study! For participating in this study you will receive 1 hour of REP credit. <br/>
   Before we begin, please close any unnecessary programs or applications on your computer. <br/>
-  This will help the study run more smoothly.    <br/>
+  This will help the study run more smoothly.    <br/><br/>
    Also, please close any browser tabs that could produce popups or alerts that would interfere with the study.    <br/>
-   Finally, once the study has started, <b>DO NOT EXIT</b> fullscreen mode or you will terminate the study and not receive credit. <br/>   
+   Finally, once the study has started, <b>DO NOT EXIT</b> fullscreen mode or you will terminate the study and not receive credit.  
   <br><br/>
   The study will switch to full screen mode when you press the button below.  <br/>
   When you are ready to begin, press the button.</div>`,
@@ -183,7 +183,8 @@ var eyeTrackingNote = {
             In addition to the tips in the figure: <br/>
             (1). Use your eyes to look around the screen and try to avoid moving your head. <br/>
             (2). Try to keep lights in front of you rather than behind you so that the webcam can clearly see your face. Avoid sitting with a window behind you. <br/>
-            (3). After you have made these adjustments, check again that your face fits nicely within the box on the video feed and that the box is green. <br/></div>
+            (3). After you have made these adjustments, check again that your face fits nicely within the box on the video feed and that the box is green. <br/>
+            (4). Turn up the brightness on your screen.</div>
              <br><br/>
              <font size=5px; font color = 'red';> <b>NOTE</b>:  <br/>
             If you are back on this page, it means the calibration and validation did not work as well as we would like.  <br/>
@@ -274,23 +275,23 @@ var choiceOverview = {
   type: 'html-keyboard-response',
   stimulus: `<div><font size=120%; font color = 'green';>Instructions</font><br/>
                                         <br><br/>
-            In this part of the study, you will decide what you SHOULD do in a series of hypothetical scenarios.
+            In this part of the study, your task is to indicate what you SHOULD do in a series of hypothetical scenarios.
             <br><br/>
-            In each question, you will be asked to decide if you would do nothing and let a group of people die. Or, if you would take a certain action that would save this group of people, but would kill another group.
+            In each scenario, you could do nothing and let one group of people die, or you couldd take an action that saves that group of people but kills another group.
             <br><br/>
-           When you are ready, press the  <b>SPACEBAR</b> to see an example question.  </div>`,
+           When you are ready, press the  <b>SPACEBAR</b> to see an example scenario.  </div>`,
   choices: ['spacebar'],
   post_trial_gap: 500,
   on_finish: () => document.body.style.cursor = 'none'
 }
 
 
-instructions_ex0 = ["In the example below, a bear is charging toward a group of five professional athletes. There are two options for you: one shown on the left and one on the right. If you do nothing, the bear will maul these athletes. But you can take the other action, push one athlete in front of the bear. If you do this, those 5 athletes will be saved.<br><br/>"+
-"You must decide what you SHOULD do if you were in this situation:  do nothing or push one professional athlete in front of the bear.</br></br></br>"];
-instructions_ex1 = ["In the example below, poisonous gas is moving towards 200 butterflies. If you do nothing, the gas will poison these butterflies. But you can take the other action, push a button to divert the poison gas toward another group of 25 butterflies. If you do this, those 200 butterflies will be saved.<br><br/>"+
-"You must decide what you SHOULD do if you were in this situation:  do nothing or push the button to divert the poison gas.</br></br></br>"];
-instructions_ex2 = ["In the example below, a trolley is moving toward one military veteran. If you do nothing, the trolley will crush the veteran. But you can take the other action, pull a lever to divert the trolley toward a group of 4 military veterans. If you do this, then the 1 veteran will be saved.<br><br/>"+
-"You must decide what you SHOULD do if you were in this situation:  do nothing or push one miliatry veteran in front of the bear.</br></br></br>"];
+instructions_ex0 = ["In the example below, a bear is charging toward a group of five professional athletes. There are two options for you: one shown on the left and one on the right. If you do nothing, the bear will maul these athletes to death. Alternatively, you could push 1 other athlete in front of the bear, killing them but saving the original 5 athletes.<br><br/>"+
+"You must indicate what you SHOULD do in this situation:  do nothing or push one professional athlete in front of the bear.</br></br></br>"];
+instructions_ex1 = ["In the example below, poison gas is moving towards two-hundred butterflies. If you do nothing, the gas will poison these butterflies to death. Alternatively, you could push a button to divert the poison gas toward twenty other butterflies, killing them but saving the original two-hundred butterflies.<br><br/>"+
+"You must indicate what you SHOULD do in this situation:  do nothing or push the button to divert the poison gas toward the twenty butterflies.</br></br></br>"];
+instructions_ex2 = ["In the example below, a runaway trolley is moving toward one military veteran. If you do nothing, the trolley will crush the veteran to death. Alternatively, you could pull a lever to divert the trolley toward a group of four other military veterans, killing them but saving the original one military veteran.<br><br/>"+
+"You must indicate what you SHOULD do in this situation:  do nothing or push one miliatry veteran in front of the trolley.</br></br></br>"];
 
 if(action_top == 1){
 var instructions_examples = {
@@ -299,13 +300,13 @@ var instructions_examples = {
   },
   type: "instructions",
   pages: [[instructions_ex0]+
-  `<div style = 'float: center;'><img src= ${practice_images[0]} width = 'auto' height='400' border='1px white';></div></br>`+
+  `<div style = 'float: center;'><img src= ${practice_images[0]} width = 'auto' height='400;></div></br>`+
   "</br>Please press the spacebar to see another example.",
   [instructions_ex1]+
-  `<div style = 'float: center;'><img src= ${practice_images[1]} width = 'auto' height='400' border='1px white'></div></br>`+
+  `<div style = 'float: center;'><img src= ${practice_images[1]} width = 'auto' height='400'></div></br>`+
   "</br>Please press the spacebar to see another example.",
   [instructions_ex2]+
-  `<div style = 'float: center;'><img src= ${practice_images[2]} width = 'auto' height='400' border='1px white'></div></br>`+
+  `<div style = 'float: center;'><img src= ${practice_images[2]} width = 'auto' height='400'></div></br>`+
   "</br>Please press the spacebar to continue."],
   allow_backward: false, 
   key_forward: 'spacebar'
@@ -337,8 +338,8 @@ var recalibrationInstruction = {
     webgazer.resume(),
    document.body.style.cursor = 'none'
   },
-  stimulus: `<div>We need to redo the calibration and validation before you begin with the choice task. </br>
-   As before, make sure you stare at each dot until it disappears and make sure you don’t move your head.</br>
+  stimulus: `<div>We need to redo the calibration and validation before you begin. </br>
+   As before, make sure you stare at each dot until it disappears and try not to move your head.</br>
    <br></br>
    Please press <b>SPACEBAR</b> when you are ready to begin.</div>`,
   choices: ['spacebar'],
@@ -365,11 +366,11 @@ var choiceInstructionReinforce = {
   type: 'html-keyboard-response',
   stimulus: `<div><font size=120%; font color = 'green';>Instructions</font><br/>
                                         <br><br/>
-       Now, we will begin with the choice task. Please keep your head still, otherwise we may have to redo the calibration and validation.<br/>
-       There will be a break halfway through the task. During the break you can move your head if you need to.    <br/>
-       Remember, you are choosing what you SHOULD do in each of these scenarios: <br/>
-       If you think you should take the action on the left, press the <b><font color='green'>F</font></b> key; <br/>
-       If you think you should take the action on the right, press the <b><font color='green'>J</font></b>  key;<br/>
+       Now, we will begin. Please keep your head still, otherwise we may have to redo the calibration and validation.<br/>
+       There will be a break halfway through. During the break you can move your head if you need to.    <br/>
+       Remember, you are indicating what you SHOULD do in each scenarios: <br/>
+       If you think you SHOULD take the action on the left, press the <b><font color='green'>F</font></b> key; <br/>
+       If you think you SHOULD take the action on the right, press the <b><font color='green'>J</font></b>  key;<br/>
                   <br><br/>
        After each choice, make sure to stare at the red circles that will appear on the screen, until they disappear.  <br/>
        This is part of ongoing adjustments to the eye-tracking.    <br/>
@@ -525,7 +526,6 @@ var instructions_RealUntimed = {
   },
   type: "instructions",
   pages: ["In this part of the study, you should carefully consider your choices.  "+  
-  "You will make a sequence of decisions with a break halfway through. <br/><br/>" + 
   "Please press the spacebar to continue."
   ],
   allow_backward: false, 
@@ -608,7 +608,7 @@ var breaktime = {
   type: "html-keyboard-response",
   stimulus: `<div>You are halfway done! Now you can take a short break if you want. You can move your head during the break.</br>
              <br></br>
-             When you are ready to continue the study, press the <b>SPACEBAR</b>.</div>`,
+             When you are ready to continue, press the <b>SPACEBAR</b>.</div>`,
   choices: ['spacebar'],
   on_start: function () {
     webgazer.pause(),
@@ -621,7 +621,7 @@ var recalibrationInstruction2 = {
   type: "html-keyboard-response",
   on_start: () => webgazer.resume(),
   stimulus: `<div>We need to redo the calibration and validation before you return to the study.  </br>
-  As before, make sure you stare at each dot until it disappears and make sure you don’t move your head.</br>
+  As before, make sure you stare at each dot until it disappears and try not to move your head.</br>
    <br></br>
    Press the <b>SPACEBAR</b> when you are ready to begin.</div>`,
   choices: ['spacebar'],
@@ -656,7 +656,7 @@ var instructions_RealTimed = {
   type: "instructions",
   pages: ["In this part of the study, you should make your choices as  <font color = 'Tomato'>quickly</font> as you can.  "+
   "You should try to make all of the decisions in 5 minutes.<br/><br/>" + 
-  "Please press the spacebar to continue to the rounds."
+  "Please press the <b>SPACEBAR</b> to continue."
   ],
   allow_backward: false, 
   key_forward: 'spacebar'
@@ -795,7 +795,7 @@ var ratings_items_instr = {
   stimulus: `<div> <font size=120%; font color = 'green';>Rating of Items</font><br/>
                                        <br><br/>
                                        Now, you will make decisions about the personal value of various items. <br/> 
-                                       For each item, please their personal value to you.  You can define “personal value” in any way you find appropriate. Personal value is not necessarily the same as monetary value. For example, we may ask the personal value of your first report card. Here, the monetary value may differ dramatically from the personal value. 
+                                       For each item, please their personal value to you.  You can define “personal value” in any way you find appropriate. Personal value is not the same as monetary value. For example, we may ask the personal value of your first report card. Here, the monetary value may differ dramatically from the personal value. 
                                        <br><br/>
                                        Please enter this personal value in the box. <br/> 
                                           <br><br/>
@@ -811,11 +811,11 @@ var ratings_actions_instr = {
   on_start:   () => document.body.style.cursor = 'pointer',
   stimulus: `<div> <font size=120%; font color = 'green';>Rating of Actions</font><br/>
                                        <br><br/>
-             Now, you will make decisions about how you would feel if you had to take certain actions. <br/> 
-             For each action, please rate it on a scale from -100 to 100 based on how bad or good you would feel to take an action.
+             Now, your task is to indicate how you would feel if you had to take certain actions. <br/> 
+             For each action, please rate it on a scale from -100 to 100 based on how bad or good you would feel taking the action.
              <br><br/> 
              -100 means that you would feel as bad as possible if you were to take this action.<br/> 
-             0 means that you would feel neutral toward this action. <br/> 
+             0 means that you would feel neither good nor bad if you were to take this action. <br/> 
              100 means that you would feel as good as possible if you were to take this action.
              <br><br/>
              During the task, you need to use your mouse to move the slider to your desired rating. <br/> 
@@ -830,11 +830,11 @@ var ratings_means_instr = {
   on_start:   () => document.body.style.cursor = 'pointer',
   stimulus: `<div> <font size=120%; font color = 'green';>Rating of Ways to Die</font><br/>
                                        <br><br/>
-                                       Now, you will make decisions about how you would feel if you saw someone die in a certain way. <br/> 
-                                       For each death, please rate it on a scale from -100 to 100 based on how bad or good you would feel to take an action.
+                                       Now, your task is to indicate how you would feel if you saw someone die in a certain way. <br/> 
+                                       For each death, please rate it on a scale from -100 to 100 based on how bad or good you would feel seeing that death.
                                        <br><br/>
                                        -100 means that you would feel as bad as possible if you saw someone die in this way.  <br/> 
-                                       0 means that you would feel neutral. <br/> 
+                                       0 means that you would feel neither good nor bad if you saw someone die in this way. <br/> 
                                        100 means that you would feel as good as possible if you saw someone die in this way.
                                        <br><br/>
                                        During the task, you need to use your mouse to move the slider to your desired rating. <br/> 
@@ -852,7 +852,7 @@ var ratings_actions_counter = 0;
 
 var ratings_actions_task = {
   timeline: [{
-    type: 'html-slider-response',
+    type: 'html-slider-response-moral-ratings',
     on_start:   () => document.body.style.cursor = 'pointer',
     stimulus: () => actions_to_rate[ratings_actions_counter],
     labels: ['-100','-75','-50','-25','0','25','50','75','100'],
@@ -868,8 +868,8 @@ var ratings_actions_task = {
       ratings_actions_counter++;
     }
 }],
-//loop_function: () => ratings_actions_counter < distinctActions.length
-loop_function: () => ratings_actions_counter < 3
+loop_function: () => ratings_actions_counter < distinctActions.length
+//loop_function: () => ratings_actions_counter < 3
 };
 
 
@@ -879,7 +879,7 @@ var ratings_means_counter = 0;
 
 var ratings_means_task = {
   timeline: [{
-    type: 'html-slider-response',
+    type: 'html-slider-response-moral-ratings',
     on_start:   () => document.body.style.cursor = 'pointer',
     stimulus: () => means_to_rate[ratings_means_counter],
     labels: ['-100','-75','-50','-25','0','25','50','75','100'],
@@ -895,15 +895,15 @@ var ratings_means_task = {
       ratings_means_counter++;
     }
 }],
-//loop_function: () => ratings_means_counter < distinctMeans.length
-loop_function: () => ratings_means_counter < 3
+loop_function: () => ratings_means_counter < distinctMeans.length
+//loop_function: () => ratings_means_counter < 3
 };
 
 var ratings_items_counter = 0;
 var ratings_items_order = jsPsych.randomization.shuffle(Array.from(Array(items.length).keys()));
 
-console.log(items[ratings_items_order[ratings_items_counter]].name);
-console.log(items.length);
+//console.log(items[ratings_items_order[ratings_items_counter]].name);
+//console.log(items.length);
 
 var ratings_items_task = {
   timeline: [{
@@ -915,8 +915,8 @@ var ratings_items_task = {
       ratings_items_counter++;
     }
   }],
-  //loop_function: () => ratings_items_counter < items.length
-  loop_function: () => ratings_items_counter < 3
+  loop_function: () => ratings_items_counter < items.length
+  //loop_function: () => ratings_items_counter < 3
 }
   
 
@@ -966,7 +966,7 @@ var demographic_survey = {
     {prompt: "What is your gender?", rows: 2, columns:50 , required:true}, 
     {prompt: "What is your age?", rows: 1, columns: 50, required:true},
     {prompt: "What is your first language?", rows: 1, columns: 50, require: false},
-    {prompt: "What is your name (to assign REP credit)?", rows: 1, columns: 50, require: false},
+    {prompt: "What is your REP ID number?", rows: 1, columns: 50, require: false},
   ],
   preamble: `<div>Thanks for taking our study! Please answer the following questions before seeing the debriefing page. </div>`,
 };
@@ -1045,19 +1045,14 @@ function startExperiment() {
   jsPsych.init({
     timeline: [
       fullscreenEnter,
-      eyeTrackingInstruction1 ,eyeTrackingInstruction2 , inital_eye_calibration ,
-      experimentOverview,
-      choiceOverview, 
-      instructions_examples,
+      eyeTrackingInstruction1,eyeTrackingInstruction2, inital_eye_calibration,
+      experimentOverview,choiceOverview,instructions_examples,
       recalibration,
       choiceInstructionReinforce,
       prac_choice,
-     instructionsReal, 
-     trials_Untimed_First,
-     trials_Timed_First,
-     ratings_overview,
-     ratings_actions_items_means, ratings_means_items_actions,
-     //demographic_survey,
+     instructionsReal,trials_Untimed_First,trials_Timed_First,
+     ratings_overview,ratings_actions_items_means, ratings_means_items_actions,
+     demographic_survey,
     debriefing_page,
 
     success_guard

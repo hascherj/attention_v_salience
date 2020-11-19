@@ -17,7 +17,7 @@ jsPsych.plugins["eye-tracking"] = (function () {
 
   function optionalMessage(display_element, flag, callback) {
     if (flag) {
-      display_element.innerHTML = '<div>Validation starts. Press the spacebar to begin. </div>';
+      display_element.innerHTML = '<div>Validation starts. Press the <b>SPACEBAR</b> to begin. </div>';
       var onkeyup = function(e) {
         if (e.keyCode == 32) {
           removeEventListener('keyup', onkeyup);
@@ -33,7 +33,7 @@ jsPsych.plugins["eye-tracking"] = (function () {
 
   function optionalMessage_interTrial(display_element, flag, callback) {
     if (flag) {
-      display_element.innerHTML = '<div>We need to re-calibrate you.  Take a short break and proceed by pressing the <b>SPACE BAR</b> when you are ready.</div>';
+      display_element.innerHTML = '<div>We need to re-calibrate you.  Take a short break and proceed by pressing the <b>SPACEBAR</b> when you are ready.</div>';
       var onkeyup = function(e) {
         if (e.keyCode == 32) {
           removeEventListener('keyup', onkeyup);
@@ -364,7 +364,7 @@ jsPsych.plugins["eye-tracking"] = (function () {
 
     function startWebgazer(callback) {
       if (trial.doInit) {
-        display_element.innerHTML = '<div> Before you begin the calibration, please wait until the video feed appears on your screen. <br></br> Follow the previous tips to adjust your position relative to your webcam. <br></br> When you are ready, please press the <b>SPACE BAR</b> to continue.</div>';
+        display_element.innerHTML = '<div> Before you begin the calibration, please wait until the video feed appears on your screen. <br></br> Follow the previous tips to adjust your position relative to your webcam. <br></br> When you are ready, please press the <b>SPACEBAR</b> to continue.</div>';
        //  Webcam is ready, please press the spacebar to continue
         //begin webgazer and also set up webgazer parameter
         webgazer.begin(function (err) {
