@@ -1093,6 +1093,7 @@ function startExperiment() {
      if(successExp) {
       closeFullscreen()
       document.body.style.cursor = 'pointer'
+      survey_code = makeSurveyCode('pass');
       jsPsych.endExperiment(`<div>
       Thank you for your participation! You can close the browser to end the experiment now. </br>
                   The webcam will turn off when you close the browser. </div>`);
