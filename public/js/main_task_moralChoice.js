@@ -16,11 +16,15 @@
 /** Constants */
 /**************/
 const ntrials = scenarios.length*2;
+const rating_req = true;
+
 const fixation_duration = 500;
 const npractice = 3;
 const nImageInst = 2;
 const debugModeCaliDot = 1;
 const realCaliDot = 1;
+
+
 
 //date constants
 var TODAY = new Date();
@@ -87,6 +91,7 @@ var subject_id = jsPsych.randomization.randomID(7);
 var experiment_code = 'mc_';
 subject_id = experiment_code + subject_id;
 console.log(subject_id);
+
 
 
 var action_top = jsPsych.randomization.sampleWithoutReplacement([1,2], 1);
@@ -873,7 +878,7 @@ var ratings_actions_task = {
     step: 1,
     start: () => getRandomFloat(-100, 100),
     prompt: `<div>Rate how you would feel if you had to take the following action?</div>`,
-    require_movement: true,
+    require_movement: rating_req,
     slider_width: 750,
     response_ends_trial: true,
     on_finish: () => {
@@ -900,7 +905,7 @@ var ratings_means_task = {
     step: 1,
     start: () => getRandomFloat(-100, 100),
     prompt: `<div>Rate how you would feel if you saw someone die in the following way?</div>`,
-    require_movement: true,
+    require_movement: rating_req,
     slider_width: 750,
     response_ends_trial: true,
     on_finish: () => {
@@ -929,21 +934,21 @@ var ratings_items_task = {
 }
   
 
-var ratings_items_counter = 0;
-var ratings_items_order = jsPsych.randomization.shuffle(Array.from(Array(items.length).keys()));
+var ratings_items_counter_societal = 0;
+var ratings_items_order_societal = jsPsych.randomization.shuffle(Array.from(Array(items.length).keys()));
 
 var ratings_items_societal_task = {
   timeline: [{
     type: 'enter-text',
     on_start:   () => document.body.style.cursor = 'pointer',
-    stimulus: ()=> items[ratings_items_order[ratings_items_counter]].name,
+    stimulus: ()=> items[ratings_items_order_societal[ratings_items_counter_societal]].name,
     prompt: `<div>What is the societal value of the following item?</div>`,
     on_finish: () => {
-      ratings_items_counter++;
+      ratings_items_counter_societal++;
     }
   }],
   loop_function: () => ratings_items_counter < items.length
-  //loop_function: () => ratings_items_counter < 3
+  //loop_function: () => ratings_items_counter_societal < 3
 }
 
 ///////////////////////
@@ -953,7 +958,8 @@ var ratings_items_societal_task = {
 var ratings_actions_items_means = {
   timeline: [ratings_actions_instr, ratings_actions_task,
     ratings_items_instr, ratings_items_task,
-    ratings_means_instr, ratings_means_task],
+    ratings_means_instr, ratings_means_task,
+    ratings_items_societal_instr, ratings_items_societal_task],
 
   conditional_function: function(){
       if(ratings_order == 1){
@@ -967,7 +973,8 @@ var ratings_actions_items_means = {
 var ratings_means_items_actions = {
   timeline: [ratings_means_instr, ratings_means_task,
     ratings_items_instr, ratings_items_task,
-    ratings_actions_instr, ratings_actions_task],
+    ratings_actions_instr, ratings_actions_task,
+    ratings_items_societal_instr, ratings_items_societal_task],
 
   conditional_function: function(){
       if(ratings_order == 2){
@@ -1075,8 +1082,8 @@ function startExperiment() {
       recalibration,
       choiceInstructionReinforce,
       prac_choice,
-     instructionsReal,trials_Untimed_First,trials_Timed_First,
-     ratings_overview,ratings_actions_items_means, ratings_means_items_actions, ratings_items_societal_task,
+     //instructionsReal,trials_Untimed_First,trials_Timed_First,
+     ratings_overview,ratings_actions_items_means, ratings_means_items_actions,
      demographic_survey,
     debriefing_page,
     success_guard

@@ -43,6 +43,7 @@ const dbx = new Dropbox({
     fetch
 });
 
+//sl.Al36fDnsT6Wu35SLXlx-PzPL4Zcr2z3RQnN_ohydCVz_0ZBJMbIm3iqAmvj18dNEQ-3vteTLAObcnNZsVdT-qn6NlxCvMRpDsh-r--tUwkMfeIaxKG4MIdL_fQlThxbNimdTSBY
 
 saveDropbox = function (content, filename, foldername) {
     return dbx.filesGetMetadata({
@@ -107,7 +108,7 @@ app.post("/subject-status", function (request, response) {
     status = request.body.status;
     subjects[subject_id] = status;
     saveDropboxSingleFile(JSON.stringify(subjects), `subject_status_${starttime}.json`)
-    .then(() => console.log(`subjuct status recorded: ${subject_id},${status}`))
+    .then(() => console.log(`subject status recorded: ${subject_id},${status}`))
     .catch(err => console.log(err));
     //saveDropboxSingleFile(JSON.stringify(subjects), `subject_status_${starttime}.json`);
    // console.log(`subjuct status recorded: ${subject_id},${status}`);
