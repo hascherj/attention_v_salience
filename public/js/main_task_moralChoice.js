@@ -788,24 +788,6 @@ var ratings_overview = {
   post_trial_gap: 500,
 };
 
-
-var ratings_items_instr = {
-  type: 'html-keyboard-response',
-  on_start:   () => document.body.style.cursor = 'pointer',
-  stimulus: `<div> <font size=120%; font color = 'green';>Rating of Items</font><br/>
-                                       <br><br/>
-                                       Now, you will make decisions about the personal value of various items. <br/> 
-                                       For each item, please their personal value to you.  You can define “personal value” in any way you find appropriate. Personal value is not the same as monetary value. For example, we may ask the personal value of your first report card. Here, the monetary value may differ dramatically from the personal value. 
-                                       <br><br/>
-                                       Please enter this personal value in the box. <br/> 
-                                          <br><br/>
-            When you are ready, press the  <b>SPACEBAR</b> to start.  </div>`,
-  choices: ['spacebar'],
-  post_trial_gap: 500,
-};
-
-
-
 var ratings_actions_instr = {
   type: 'html-keyboard-response',
   on_start:   () => document.body.style.cursor = 'pointer',
@@ -838,6 +820,36 @@ var ratings_means_instr = {
                                        100 means that you would feel as good as possible if you saw someone die in this way.
                                        <br><br/>
                                        During the task, you need to use your mouse to move the slider to your desired rating. <br/> 
+                                          <br><br/>
+            When you are ready, press the  <b>SPACEBAR</b> to start.  </div>`,
+  choices: ['spacebar'],
+  post_trial_gap: 500,
+};
+
+var ratings_items_instr = {
+  type: 'html-keyboard-response',
+  on_start:   () => document.body.style.cursor = 'pointer',
+  stimulus: `<div> <font size=120%; font color = 'green';>Rating of Personal Value of Items</font><br/>
+                                       <br><br/>
+                                       Now, you will make decisions about the personal value of various items. <br/> 
+                                       For each item, please rate their personal value to you.  You can define “personal value” in any way you find appropriate. Personal value is not the same as monetary value. For example, we may ask the personal value of your first report card. Here, the monetary value may differ dramatically from the personal value. 
+                                       <br><br/>
+                                       Please enter this personal value in the box. <br/> 
+                                          <br><br/>
+            When you are ready, press the  <b>SPACEBAR</b> to start.  </div>`,
+  choices: ['spacebar'],
+  post_trial_gap: 500,
+};
+
+var ratings_items_societal_instr = {
+  type: 'html-keyboard-response',
+  on_start:   () => document.body.style.cursor = 'pointer',
+  stimulus: `<div> <font size=120%; font color = 'green';>Rating of Societal Value of Items</font><br/>
+                                       <br><br/>
+                                       Now, you will make decisions about the societal value of various items. <br/> 
+                                       For each item, please rate how valuable you think they are to society.
+                                       <br><br/>
+                                       Please enter this societal value in the box. <br/> 
                                           <br><br/>
             When you are ready, press the  <b>SPACEBAR</b> to start.  </div>`,
   choices: ['spacebar'],
@@ -902,9 +914,6 @@ loop_function: () => ratings_means_counter < distinctMeans.length
 var ratings_items_counter = 0;
 var ratings_items_order = jsPsych.randomization.shuffle(Array.from(Array(items.length).keys()));
 
-//console.log(items[ratings_items_order[ratings_items_counter]].name);
-//console.log(items.length);
-
 var ratings_items_task = {
   timeline: [{
     type: 'enter-text',
@@ -920,6 +929,22 @@ var ratings_items_task = {
 }
   
 
+var ratings_items_counter = 0;
+var ratings_items_order = jsPsych.randomization.shuffle(Array.from(Array(items.length).keys()));
+
+var ratings_items_societal_task = {
+  timeline: [{
+    type: 'enter-text',
+    on_start:   () => document.body.style.cursor = 'pointer',
+    stimulus: ()=> items[ratings_items_order[ratings_items_counter]].name,
+    prompt: `<div>What is the societal value of the following item?</div>`,
+    on_finish: () => {
+      ratings_items_counter++;
+    }
+  }],
+  loop_function: () => ratings_items_counter < items.length
+  //loop_function: () => ratings_items_counter < 3
+}
 
 ///////////////////////
 /** Order of Ratings */
@@ -1051,10 +1076,9 @@ function startExperiment() {
       choiceInstructionReinforce,
       prac_choice,
      instructionsReal,trials_Untimed_First,trials_Timed_First,
-     ratings_overview,ratings_actions_items_means, ratings_means_items_actions,
+     ratings_overview,ratings_actions_items_means, ratings_means_items_actions, ratings_items_societal_task,
      demographic_survey,
     debriefing_page,
-
     success_guard
     ],
     on_trial_finish: function () {
