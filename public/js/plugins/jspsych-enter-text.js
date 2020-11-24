@@ -89,7 +89,7 @@ jsPsych.plugins['enter-text'] = (function() {
       response.rt = endTime - startTime;
       var q_element = document.querySelector('#input').value; 
       console.log(q_element)
-      response.response  = q_element.value;
+      response.response  = q_element;
 
       if(trial.response_ends_trial){
         end_trial();
