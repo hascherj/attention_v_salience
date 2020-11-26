@@ -998,7 +998,7 @@ var demographic_survey = {
     {prompt: "What is your gender?", rows: 2, columns:50 , required:true}, 
     {prompt: "What is your age?", rows: 1, columns: 50, required:true},
     {prompt: "What is your first language?", rows: 1, columns: 50, require: false},
-    {prompt: "What is your name.number?", rows: 1, columns: 50, require: false},
+    {prompt: "What is your name (only used to assign REP credit)?", rows: 1, columns: 50, require: false},
   ],
   preamble: `<div>Thanks for taking our study! Please answer the following questions before seeing the debriefing page. </div>`,
 };
@@ -1082,7 +1082,7 @@ function startExperiment() {
       recalibration,
       choiceInstructionReinforce,
       prac_choice,
-     //instructionsReal,trials_Untimed_First,trials_Timed_First,
+     instructionsReal,trials_Untimed_First,trials_Timed_First,
      ratings_overview,ratings_actions_items_means, ratings_means_items_actions,
      demographic_survey,
     debriefing_page,
