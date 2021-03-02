@@ -60,12 +60,19 @@ jsPsych.plugins['html-slider-response-moral-ratings'] = (function() {
         default: null,
         description: 'Width of the slider in pixels.'
       },
-      button_label: {
+      button_label_continue: {
         type: jsPsych.plugins.parameterType.STRING,
         pretty_name: 'Button label',
         default:  'Continue',
         array: false,
         description: 'Label of the button to advance.'
+      },
+      button_label_skip: {
+        type: jsPsych.plugins.parameterType.STRING,
+        pretty_name: 'Button label',
+        default:  'Like',
+        array: false,
+        description: 'Label of the button to skip.'
       },
       require_movement: {
         type: jsPsych.plugins.parameterType.BOOL,
@@ -102,7 +109,12 @@ jsPsych.plugins['html-slider-response-moral-ratings'] = (function() {
 
   plugin.trial = function(display_element, trial) {
 
-    var html = '<div id="jspsych-html-slider-response-wrapper" style="margin: 100px 0px;">';
+    var // add skip button
+    //html = '<button id="jspsych-image-slider-response-skip" class="jspsych-btn" '+ (trial.require_movement ? "disabled" : "") + '>'+trial.button_label_skip+'</button>';
+    html = '<button id="jspsych-image-slider-response-skip" class="jspsych-btn" '+ '>'+trial.button_label_skip+'</button>';
+
+
+    html += '<div id="jspsych-html-slider-response-wrapper" style="margin: 100px 0px;">';
     if (trial.prompt !== null){
       html += trial.prompt;
     }
@@ -133,7 +145,7 @@ jsPsych.plugins['html-slider-response-moral-ratings'] = (function() {
 
            //add trial anchors
            html += `<div></br><span style="float: left; font-size: 80%;"> \u27f5 feel as bad as possible</span>`;
-           html += `<span style="float: right; font-size: 80%;">feel as good as possible \u27f6 </span></div>`;
+           html += `<span style="float: right; font-size: 80%;">feel neither good nor bad \u27f6 </span></div>`;
 
 
 
@@ -146,7 +158,7 @@ jsPsych.plugins['html-slider-response-moral-ratings'] = (function() {
 
 
     // add submit button
-    html += '<button id="jspsych-html-slider-response-next" class="jspsych-btn" '+ (trial.require_movement ? "disabled" : "") + '>'+trial.button_label+'</button>';
+    html += '<button id="jspsych-html-slider-response-next" class="jspsych-btn" '+ (trial.require_movement ? "disabled" : "") + '>'+trial.button_label_continue+'</button>';
 
     display_element.innerHTML = html;
 
@@ -171,6 +183,20 @@ jsPsych.plugins['html-slider-response-moral-ratings'] = (function() {
         end_trial();
       } else {
         display_element.querySelector('#jspsych-html-slider-response-next').disabled = true;
+      }
+
+    });
+
+    display_element.querySelector('#jspsych-image-slider-response-skip').addEventListener('click', function() {
+      // measure response time
+      var endTime = performance.now();
+      response.rt = endTime - startTime;
+      response.response = -1;
+
+      if(trial.response_ends_trial){
+        end_trial();
+      } else {
+        display_element.querySelector('#jspsych-image-slider-response-skip').disabled = true;
       }
 
     });

@@ -11,7 +11,13 @@ jsPsych.plugins["moral-binary-choice"] = (function () {
 
     name: "moral-binary-choice",
     parameters: {
-      trial_number:{
+      overall_trial_number:{
+        type: jsPsych.plugins.parameterType.INT,
+        pretty_name: 'overall trial number',
+        default: undefined,
+        description: 'the trial number in the block'
+      },
+      condition_trial_number:{
         type: jsPsych.plugins.parameterType.INT,
         pretty_name: 'trial number',
         default: undefined,
@@ -24,13 +30,13 @@ jsPsych.plugins["moral-binary-choice"] = (function () {
         description: 'The HTML string to be displayed'
       },
       number_fewer: {
-        type: jsPsych.plugins.parameterType.HTML_STRING,
+        type: jsPsych.plugins.parameterType.INT,
         pretty_name: 'numbers',
         default: undefined,
         description: 'the number of people killed: fewer'
       },
       number_more: {
-        type: jsPsych.plugins.parameterType.HTML_STRING,
+        type: jsPsych.plugins.parameterType.INT,
         pretty_name: 'numbers',
         default: undefined,
         description: 'the number of people killed: more'
@@ -63,7 +69,7 @@ jsPsych.plugins["moral-binary-choice"] = (function () {
       realOrCatch: {
         type: jsPsych.plugins.parameterType.INT,
         pretty_name: 'real-catch',
-        default: true,
+        default: 1,
         description: 'Whether it is a real choice or catch, real- true'
       },
       timing_response: {
@@ -116,185 +122,183 @@ jsPsych.plugins["moral-binary-choice"] = (function () {
       display_element.innerHTML = '';
       var new_html = '';
 
-      //if catch trial, switch fewer and more numbers
-      if(trial.realOrCatch==0){
-     var more = trial.number_more;
-     var fewer = trial.number_fewer;
-
-      trial.number_fewer = more;
-      trial.number_more= fewer;
-      };
+      var n_more;
+      var n_fewer;
 
 //if it's an item with a number restriction, change numbers
-if(trial.items.number_max!=null){
-  trial.number_fewer = 1;
-  trial.number_more = getRandomInt(2, trial.items.number_max);
+if(trial.items.M_numbermax!=null && trial.items.F_numbermax!=null){
+  n_more = getRandomInt(2, trial.items.M_numbermax);
+  n_fewer = getRandomInt(1, n_more-1);
+
+} else if (trial.items.M_numbermax!=null && trial.items.F_numbermax==null){
+  n_more = getRandomInt(2, trial.items.M_numbermax);
+  n_fewer = getRandomInt(1, n_more-1);
+
+} else if (trial.items.M_numbermax==null && trial.items.F_numbermax!=null){
+  n_fewer = getRandomInt(1, trial.items.F_numbermax);
+  if(trial.number_more < n_fewer){
+    n_more = n_fewer;
+    n_fewer = trial.number_more;
+  } else {
+    n_more = trial.number_more;
+  };
+
+} else{
+  n_more = trial.number_more;
+  n_fewer = trial.number_fewer;
 };
 
+
+    //if catch trial, switch fewer and more lines
+    if(trial.realOrCatch==0){
+      var n_more0 = n_more;
+      var n_fewer0 = n_fewer;
+      n_more = n_fewer0;
+      n_fewer = n_more0;
+    };
+
 //if it's a personal item
-if(trial.items.general==0){
-  var personal_identifier = "your ";
+if(trial.items.M_general==0){
+  var personal_identifier_M = "your ";
 }else{
-  var personal_identifier = "";
+  var personal_identifier_M = "";
+};
+if(trial.items.F_general==0){
+  var personal_identifier_F = "your ";
+}else{
+  var personal_identifier_F = "";
 }
-
-var number_fewer_words; 
-var number_more_words; 
-
 
 //[1,2,3,4,5,10,20,50,100,200]
 //convert numbers to words 
-if(trial.number_fewer=="1"){
+var number_fewer_words; 
+var number_more_words; 
+
+if(n_fewer==1){
   number_fewer_words = "one";
-}else if(trial.number_fewer=="2"){
+}else if(n_fewer==2){
   number_fewer_words = "two";
-}else if(trial.number_fewer=="3"){
+}else if(n_fewer==3){
   number_fewer_words = "three";
-}else if(trial.number_fewer=="4"){
+}else if(n_fewer==4){
   number_fewer_words = "four";
-}else if(trial.number_fewer=="5"){
+}else if(n_fewer==5){
   number_fewer_words = "five";
-}else if(trial.number_fewer=="10"){
+}else if(n_fewer==10){
   number_fewer_words = "ten";
-}else if(trial.number_fewer=="20"){
+}else if(n_fewer==20){
   number_fewer_words = "twenty";
-}else if(trial.number_fewer=="50"){
+}else if(n_fewer==50){
     number_fewer_words = "fifty";
-  }else if(trial.number_fewer=="100"){
+  }else if(n_fewer==100){
     number_fewer_words = "one-hundred";
-  }else if(trial.number_fewer=="200"){
+  }else if(n_fewer==200){
     number_fewer_words = "two-hundred";
   };
 
-  //[1,2,3,4,5,10,20,50,100,200]
-if(trial.number_more=="1"){
-  number_more_words = "one";
-}else if(trial.number_more=="2"){
-  number_more_words = "two";
-}else if(trial.number_more=="3"){
-  number_more_words = "three";
-}else if(trial.number_more=="4"){
-  number_more_words = "four";
-}else if(trial.number_more=="5"){
-  number_more_words = "five";
-}else if(trial.number_more=="10"){
-  number_more_words = "ten";
-}else if(trial.number_more=="20"){
-  number_more_words = "twenty";
-}else if(trial.number_more=="50"){
-  number_more_words = "fifty";
-}else if(trial.number_more=="100"){
-  number_more_words = "one-hundred";
-}else if(trial.number_more=="200"){
-  number_more_words = "two-hundred";
-};
+  if(n_more==1){
+    number_more_words = "one";
+  }else if(n_more==2){
+    number_more_words = "two";
+  }else if(n_more==3){
+    number_more_words = "three";
+  }else if(n_more==4){
+    number_more_words = "four";
+  }else if(n_more==5){
+    number_more_words = "five";
+  }else if(n_more==10){
+    number_more_words = "ten";
+  }else if(n_more==20){
+    number_more_words = "twenty";
+  }else if(n_more==50){
+    number_more_words = "fifty";
+    }else if(n_more==100){
+      number_more_words = "one-hundred";
+    }else if(n_more==200){
+      number_more_words = "two-hundred";
+    };
 
-console.log(trial.number_fewer);
+console.log(n_more);
+console.log(n_fewer);
 console.log(number_fewer_words);
-
-console.log(trial.number_more);
 console.log(number_more_words);
 
+    //set up action lines
+    var action_line = `${trial.action.act}`;
+    var inaction_line = `${trial.action.dont_act}`;
 
-      if (action_top == 1 && trial.act_side == 1){
+    //set up outcome lines
+    if (n_fewer==1){
+      var fewer_line = `you sacrifice ${personal_identifier_F}${number_fewer_words} ${trial.items.F_singular} near you`;
+    }else{
+      var fewer_line = `you sacrifice a group of ${personal_identifier_F}${number_fewer_words} ${trial.items.F_plural}`;
+    };
+    
+    if (n_more==1){
+      var more_line = `you watch ${personal_identifier_M}${number_more_words} ${trial.items.M_singular} die`;
+    }else{
+      var more_line = `you watch a group of ${personal_identifier_M}${number_more_words} ${trial.items.M_plural} die`;
+    };
+
+
+//set up text in each quadrant
+if (action_top == 1 && trial.act_side == 1){
 //action on top & outcome on bottom
 //act on left & in action right
 
 // by pushing them towards the shark      by leaving them in the shark's path
 // you sacrifice 1 lifegaurd near you     you let a group of 2 lifegaurds die
-      new_html += '<div class="grid-container">';
-      new_html += `<div id="UL">${trial.action.act}</div>`;
-      new_html += `<div id="UR">${trial.action.dont_act}</div>`;
 
-      if (trial.number_fewer=="1"){
-        new_html += `<div id="LL">you sacrifice ${personal_identifier}${number_fewer_words} ${trial.items.singular} near you </div>`;
-      }else{
-        new_html += `<div id="LL">you sacrifice a group of ${personal_identifier}${number_fewer_words} ${trial.items.plural}</div>`;
-      }
-      if(trial.number_more=="1"){
-        new_html += `<div id="LR">you let ${personal_identifier}${number_more_words} ${trial.items.singular} die </div>`;
-      }else{
-        new_html += `<div id="LR">you let a group of ${personal_identifier}${number_more_words} ${trial.items.plural} die </div>`;
-      }
-      new_html += '</div>';
-        
+  var UL = action_line;
+  var UR = inaction_line;
+  var LL = fewer_line;
+  var LR = more_line;
 
-
-      } else if (action_top == 1 && trial.act_side == 2){
+} else if (action_top == 1 && trial.act_side == 2){
 //action on top & outcome on bottom
 //act on right & in action left
 
 // by leaving them in the shark's path    by pushing them towards the shark      
-// you let a group of 2 lifegaurds die    you sacrifice 1 lifegaurd near you     
-new_html += '<div class="grid-container">';
-new_html += `<div id="UL">${trial.action.dont_act}</div>`;
-new_html += `<div id="UR">${trial.action.act}</div>`;
+// you let a group of 2 lifegaurds die    you sacrifice 1 lifegaurd near you 
 
-
-if(trial.number_more=="1"){
-  new_html += `<div id="LL">you let ${personal_identifier}${number_more_words} ${trial.items.singular} die </div>`;
-}else{
-  new_html += `<div id="LL">you let a group of ${personal_identifier}${number_more_words} ${trial.items.plural} die </div>`;
-}
-
-if (trial.number_fewer=="1"){
-  new_html += `<div id="LR">you sacrifice ${personal_identifier}${number_fewer_words} ${trial.items.singular} near you </div>`;
-}else{
-  new_html += `<div id="LR">you sacrifice a group of ${personal_identifier}${number_fewer_words} ${trial.items.plural}</div>`;
-}
-new_html += '</div>';
-
-
-
-}else if (action_top == 2 && trial.act_side == 1){
-//action on bottom & outcome on top
+var UR = action_line;
+var UL = inaction_line;
+var LR = fewer_line;
+var LL = more_line;
+  
+} else if (action_top == 2 && trial.act_side == 1){
+  //action on bottom & outcome on top
 //act on left & in action right
 
 // you sacrifice 1 lifegaurd near you     you let a group of 2 lifegaurds die
 // by pushing them towards the shark      by leaving them in the shark's path
-new_html += '<div class="grid-container">';
-if (trial.number_fewer=="1"){
-  new_html += `<div id="UL">you sacrifice ${personal_identifier}${number_fewer_words} ${trial.items.singular} near you </div>`;
-}else{
-  new_html += `<div id="UL">you sacrifice a group of ${personal_identifier}${number_fewer_words} ${trial.items.plural}</div>`;
-}
 
-if(trial.number_more=="1"){
-  new_html += `<div id="UR">you let ${personal_identifier}${number_more_words} ${trial.items.singular} die </div>`;
-}else{
-  new_html += `<div id="UR">you let a group of ${personal_identifier}${number_more_words} ${trial.items.plural} die </div>`;
-}
-
-new_html += `<div id="LL">${trial.action.act}</div>`;
-new_html += `<div id="LR">${trial.action.dont_act}</div>`;
-new_html += '</div>';
-
-   
-
-}else if (action_top == 2 && trial.act_side == 2){
+var LL = action_line;
+var LR = inaction_line;
+var UL = fewer_line;
+var UR = more_line;
+  
+} else if (action_top == 2 && trial.act_side == 2){
 //action on bottom & outcome on top
 //act on right & in action left
 
 // you let a group of 2 lifegaurds die    you sacrifice 1 lifegaurd near you  
-// by leaving them in the shark's path    by pushing them towards the shark   
+// by leaving them in the shark's path    by pushing them towards the shark 
+
+var LR = action_line;
+var LL = inaction_line;
+var UR = fewer_line;
+var UL = more_line;
+};
+
+
+//show the text
 new_html += '<div class="grid-container">';
-
-if(trial.number_more=="1"){
-  new_html += `<div id="UL">you let ${personal_identifier}${number_more_words} ${trial.items.singular} die </div>`;
-}else{
-  new_html += `<div id="UL">you let a group of ${personal_identifier}${number_more_words} ${trial.items.plural} die </div>`;
-}
-
-if (trial.number_fewer=="1"){
-  new_html += `<div id="UR">you sacrifice ${personal_identifier}${number_fewer_words} ${trial.items.singular} near you </div>`;
-}else{
-  new_html += `<div id="UR">you sacrifice a group of ${number_fewer_words} ${trial.items.plural}</div>`;
-}
-new_html += `<div id="LL"> ${trial.action.dont_act} </div>`;
-new_html += `<div id="LR"> ${trial.action.act}</div>`;
+new_html += `<div id="UL">${UL}</div>`;
+new_html += `<div id="UR">${UR}</div>`;
+new_html += `<div id="LL">${LL}</div>`;
+new_html += `<div id="LR">${LR}</div>`;
 new_html += '</div>';
-
-}
 
       display_element.innerHTML = new_html;
     };
@@ -370,17 +374,29 @@ new_html += '</div>';
     clearInterval(eye_tracking_interval); }
       // data saving
       var trial_data = {
-        "trial_number": trial.trial_number,
+        "overall_trial_number": trial.overal_trial_number,
+        "condition_trial_number": trial.trial_number,
         "rt": response.rt,
         "key_press": response.key,
         "choices": trial.choices,
+
+        "scenario": trial.action.name,
         "action": trial.action.act,
         "inaction": trial.action.dont_act,
-        "number_fewer": trial.number_fewer,
-        "number_more": trial.number_more,
-        "item": trial.items.singular,
+
         "action_top": trial.action_top,
         "act_side": trial.act_side,
+
+        "number_fewer": trial.n_fewer,
+        "number_more": trial.n_more,
+        "item_fewer": trial.items.singular,
+        "item_more": trial.items.singular,
+
+        "UL": trial.UL,
+        "LL": trial.LL,
+        "UR": trial.UR,
+        "LR": trial.LR,
+
         "eyeData": JSON.stringify(eyeData),
         "realOrCatch": trial.realOrCatch,
         "timing_response": trial.timing_response,

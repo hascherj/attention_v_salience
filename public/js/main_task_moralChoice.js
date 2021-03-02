@@ -2,29 +2,28 @@
 /** To Do **/
 /////////////
 
+//array numbers show up as brackets in csv
+//random identities from cohen and ahn paper
 
 //////////////////
 /** Reminders **/
 /////////////////
 //turn on all timeline
-//trials (=scenarios.length*2)
-//ratings_means
-//ratings_actions
-//ratings_items
+//trials (=scenarios.length*4)
 
 /**************/
 /** Constants */
 /**************/
-const ntrials = scenarios.length*2;
-const rating_req = true;
 
+const ntrials = scenarios.length*4; //trials per condition (see each scenario 4 times in each condition)
+//const ntrials = 5*4 //20 per condition (40 in totalover 4 blocks)
+
+const nblocks = 2;  //blocks per condiiton (divide the condition into two blocks)
+const rating_req = true;
 const fixation_duration = 500;
 const npractice = 3;
-const nImageInst = 2;
 const debugModeCaliDot = 1;
 const realCaliDot = 1;
-
-
 
 //date constants
 var TODAY = new Date();
@@ -56,8 +55,8 @@ function repeatArray(arr, count) {
 
 function makeSurveyCode(status) {
   uploadSubjectStatus(status);
-  var prefix = {'success': 'cg', 'failed': 'sb'}[status]
-  return `${prefix}${subject_id}`;
+  var suffix = {'success': 'su', 'failed': 'fa'}[status]
+  return `${subject_id}${suffix}`;
 }
 
 function uploadSubjectStatus(status) {
@@ -69,19 +68,15 @@ function uploadSubjectStatus(status) {
   });
 }
 
+
+//////////////////////
+/** Import Images **/
+/////////////////////
+
 var instruct_img = [];
-for (var i = 0; i < nImageInst; i++) {
+for (var i = 0; i < 4; i++) {
   instruct_img.push('img/instruct' + i + '.jpg');
 }
-
-var practice_images = [];
-for (var i = 0; i <= npractice*2-1; i++) {
-  practice_images.push('img/pracImg/instructions_ex' + i + '.jpg');
-}
-
-
-//only use non-negative items (ie dont include pedophiles)
-var items_to_use = items.filter(obj => obj.negative == 0);
 
 ///////////////////////////////
 /** Set Subject Parameters **/
@@ -90,18 +85,11 @@ var items_to_use = items.filter(obj => obj.negative == 0);
 var subject_id = jsPsych.randomization.randomID(7);
 var experiment_code = 'mc_';
 subject_id = experiment_code + subject_id;
-console.log(subject_id);
-
-
 
 var action_top = jsPsych.randomization.sampleWithoutReplacement([1,2], 1);
-//var action_top = 2;
 
 //if the untimed is first, or timed is first
 var timed_first = jsPsych.randomization.sampleWithoutReplacement([0,1], 1);
-
-var ratings_order = jsPsych.randomization.sampleWithoutReplacement([1,2], 1);
-
 
 /////////////////////////
 /** Add Subject Info **/
@@ -112,8 +100,7 @@ jsPsych.data.addProperties({
   date: DATE,
   subid_date: subject_id + DATE,
   action_top: action_top,
-  timed_order: timed_first,
-  ratings_order: ratings_order
+  timed_order: timed_first
 });
 
 //////////////////
@@ -137,6 +124,10 @@ var fullscreenEnter = {
     document.body.style.cursor = 'none'
   }
 };
+
+//////////////////////////
+/** Set-up Eyetracking */
+/////////////////////////
 
 var eyeTrackingInstruction1 = {
   type: 'html-keyboard-response',
@@ -271,6 +262,59 @@ var experimentOverview = {
   post_trial_gap: 500,
 }
 
+///////////////
+/** Ratings */
+//////////////
+
+var ratings_instr = {
+  type: 'html-keyboard-response',
+  on_start:   () => document.body.style.cursor = 'none',
+  stimulus: `<div> <font size=120%; font color = 'green';>Rating of Actions</font><br/>
+                                       <br><br/>
+             In this part of the experiment, your task is to indicate how you would feel if you had to take certain actions. <br/> 
+             For each action, please rate it on a scale from -100 to 0 based on how bad you would feel taking the action.
+             <br><br/> 
+             -100 means that you would feel as bad as possible if you were to take this action.<br/> 
+             0 means that you would feel neither good nor bad if you were to take this action. <br/><br/> 
+             If you would feel good to take this action, press the button that says Feel Good. 
+             <br><br/>
+             During the task, you need to use your mouse to move the slider to your desired rating. <br/> 
+                                          <br><br/>
+            When you are ready, press the  <b>SPACEBAR</b> to start.  </div>`,
+  choices: ['spacebar'],
+  post_trial_gap: 500,
+};
+
+const distinctScenarios = [...new Set(scenarios.map(x => x.full))];
+var scenarios_to_rate = jsPsych.randomization.shuffle(distinctScenarios);
+var ratings_counter = 0;
+
+var ratings_task = {
+  timeline: [{
+    type: 'html-slider-response-moral-ratings',
+    on_start:   () => document.body.style.cursor = 'pointer',
+    trial: () => ratings_counter+1,
+    stimulus: () => scenarios_to_rate[ratings_counter],
+    labels: ['-100','-80','-70','-60','-50','-40','-30','-20','-10','0'],
+    min: -100,
+    max: 0,
+    step: 1,
+    start: () => getRandomFloat(-100, 0),
+    prompt: `<div>Rate how you would feel if you had to take the following action?</div>`,
+    button_label_continue: 'Next',
+    button_label_skip: 'Feel Good',
+    require_movement: rating_req,
+    slider_width: 750,
+    response_ends_trial: true,
+    data: { choice_type: 'ratings'},
+    on_finish: () => {
+      ratings_counter++;
+    }
+}],
+loop_function: () => ratings_counter < distinctScenarios.length
+//loop_function: () => ratings_actions_counter < 3
+};
+
 
 /***********************/
 /******** Trials *******/
@@ -282,7 +326,7 @@ var choiceOverview = {
                                         <br><br/>
             In this part of the study, your task is to indicate what you SHOULD do in a series of hypothetical scenarios.
             <br><br/>
-            In each scenario, you could do nothing and let one group of people die, or you couldd take an action that saves that group of people but kills another group.
+            In each scenario, you could do nothing and let one group of people or animals die, or you could take an action that saves that group but kills another group.
             <br><br/>
            When you are ready, press the  <b>SPACEBAR</b> to see an example scenario.  </div>`,
   choices: ['spacebar'],
@@ -291,49 +335,116 @@ var choiceOverview = {
 }
 
 
-instructions_ex0 = ["In the example below, a bear is charging toward a group of five professional athletes. There are two options for you: one shown on the left and one on the right. If you do nothing, the bear will maul these athletes to death. Alternatively, you could push 1 other athlete in front of the bear, killing them but saving the original 5 athletes.<br><br/>"+
-"You must indicate what you SHOULD do in this situation:  do nothing or push one professional athlete in front of the bear.</br></br></br>"];
-instructions_ex1 = ["In the example below, poison gas is moving towards two-hundred butterflies. If you do nothing, the gas will poison these butterflies to death. Alternatively, you could push a button to divert the poison gas toward twenty other butterflies, killing them but saving the original two-hundred butterflies.<br><br/>"+
-"You must indicate what you SHOULD do in this situation:  do nothing or push the button to divert the poison gas toward the twenty butterflies.</br></br></br>"];
-instructions_ex2 = ["In the example below, a runaway trolley is moving toward one military veteran. If you do nothing, the trolley will crush the veteran to death. Alternatively, you could pull a lever to divert the trolley toward a group of four other military veterans, killing them but saving the original one military veteran.<br><br/>"+
-"You must indicate what you SHOULD do in this situation:  do nothing or push one miliatry veteran in front of the trolley.</br></br></br>"];
+/************************************/
+/******** Instructions Setup *******/
+/***********************************/
 
-if(action_top == 1){
+instructions_ex0 = ["In the example below, a bear is charging toward a group of five professional basketball players. There are two options for you: one shown on the left and one on the right. If you do nothing, the bear will maul these football players to death. Alternatively, you could push one professional football player in front of the bear, killing them but saving the five basketball players.<br><br/>"+
+"You must indicate what you SHOULD do in this situation:  do nothing or push one professional football player in front of the bear.</br></br></br>"];
+instructions_ex1 = ["In the example below, poison gas is moving towards twenty butterflies. If you do nothing, the gas will poison these butterflies to death. Alternatively, you could push a button to divert the poison gas toward fifty ladybugs, killing them but saving the twenty butterflies.<br><br/>"+
+"You must indicate what you SHOULD do in this situation:  do nothing or push the button to divert the poison gas toward the fifty ladybugs.</br></br></br>"];
+instructions_ex2 = ["In the example below, a runaway trolley is moving toward four navy veterans. If you do nothing, the trolley will crush the veterans to death. Alternatively, you could pull a lever to divert the trolley toward one army veteran, killing them but saving the navy veterans.<br><br/>"+
+"You must indicate what you SHOULD do in this situation:  do nothing or pull the lever killing the one army veteran.</br></br></br>"];
+
+
+//example 1
+    var action_line1 = 'by pushing them in front of the bear';
+    var inaction_line1 = 'by leaving them in the path of the bear';
+    var fewer_line1 = 'you sacrifice one pro football player near you';
+    var more_line1 = 'you watch a group of five pro basketball players die';
+
+    //example 2 (catch trial)
+    var action_line2 = 'by pushing a button to release poisonous gas';
+    var inaction_line2 = 'by allowing them to be suffocated by poisonous gas';
+    var fewer_line2 = 'you sacrifice a group of fifty lady bugs';
+    var more_line2 = 'you watch a group of twenty butterflies die';
+
+//example 3 
+var action_line3 = 'by pulling a lever to divert the trolley';
+var inaction_line3 = 'by leaving them in the path of the trolley';
+var fewer_line3 = 'you sacrifice one army veteran near you';
+var more_line3 = 'you watch a group of four navy veterans die';
+
+if(action_top==1){
+  var UL1 = action_line1;
+  var UR1 = inaction_line1;
+  var LL1 = fewer_line1;
+  var LR1 = more_line1;
+
+  var UL2 = inaction_line2;
+  var UR2 = action_line2;
+  var LL2 = more_line2;
+  var LR2 = fewer_line2;
+
+  var UL3 = inaction_line3;
+  var UR3 = action_line3;
+  var LL3 = more_line3;
+  var LR3 = fewer_line3;
+
+}else if(action_top==2){
+  var LL1 = action_line1;
+  var LR1 = inaction_line1;
+  var UL1 = more_line1;
+  var UR1 = fewer_line1;
+
+  var LL2 = inaction_line2;
+  var LR2 = action_line2;
+  var UL2 = more_line2;
+  var UR2 = fewer_line2;
+
+  var LL3 = inaction_line3;
+  var LR3 = action_line3;
+  var UL3 = more_line3;
+  var UR3 = fewer_line3;
+};
+
+ex1_image = '';
+ex1_image += '<div class="grid-container-instr">';
+ex1_image += `<div id="UL">${UL1}</div>`;
+ex1_image += `<div id="UR">${UR1}</div>`;
+ex1_image += `<div id="LL">${LL1}</div>`;
+ex1_image += `<div id="LR">${LR1}</div>`;
+ex1_image += '</div>';
+
+ex2_image = '';
+ex2_image += '<div class="grid-container-instr">';
+ex2_image += `<div id="UL">${UL2}</div>`;
+ex2_image += `<div id="UR">${UR2}</div>`;
+ex2_image += `<div id="LL">${LL2}</div>`;
+ex2_image += `<div id="LR">${LR2}</div>`;
+ex2_image += '</div>';
+
+ex3_image = '';
+ex3_image += '<div class="grid-container-instr">';
+ex3_image += `<div id="UL">${UL3}</div>`;
+ex3_image += `<div id="UR">${UR3}</div>`;
+ex3_image += `<div id="LL">${LL3}</div>`;
+ex3_image += `<div id="LR">${LR3}</div>`;
+ex3_image += '</div>';
+
 var instructions_examples = {
   data:{
     screen_id: "instructions_examples"
   },
   type: "instructions",
-  pages: [[instructions_ex0]+
-  `<div style = 'float: center;'><img src= ${practice_images[0]} width = 'auto' height='400;></div></br>`+
-  "</br>Please press the spacebar to see another example.",
+  pages: [
+    "<div></br><font size=100%; font color = 'green';>Example 1</font><br/><br><br/></div>"+
+    [instructions_ex0]+
+  [ex1_image]+
+  "Please press the spacebar to see another example.",
+
+  "<div></br><font size=100%; font color = 'green';>Example 2</font><br/><br><br/></div>"+
   [instructions_ex1]+
-  `<div style = 'float: center;'><img src= ${practice_images[1]} width = 'auto' height='400'></div></br>`+
-  "</br>Please press the spacebar to see another example.",
+  [ex2_image]+
+  "Please press the spacebar to see another example.",
+
+  "<div></br><font size=100%; font color = 'green';>Example 3</font><br/><br><br/></div>"+
   [instructions_ex2]+
-  `<div style = 'float: center;'><img src= ${practice_images[2]} width = 'auto' height='400'></div></br>`+
-  "</br>Please press the spacebar to continue."],
+  [ex3_image]+
+  "Please press the spacebar to continue."],
+
   allow_backward: false, 
   key_forward: 'spacebar'
-}
-}else{
-  var instructions_examples = {
-    data:{
-      screen_id: "instructions_examples"
-    },
-    type: "instructions",
-    pages: [[instructions_ex0]+
-    `<div style = 'float: center;'><img src= ${practice_images[3]} width = 'auto' height='400' border='1px solid white';></div></br>`+
-    "</br>Please press the spacebar to see another example.",
-    [instructions_ex1]+
-    `<div style = 'float: center;'><img src= ${practice_images[4]} width = 'auto' height='400' border='1px solid white'></div></br>`+
-    "</br>Please press the spacebar to see another example.",
-    [instructions_ex2]+
-    `<div style = 'float: center;'><img src= ${practice_images[5]} width = 'auto' height='400' border='1px solid white'></div></br>`+
-    "</br>Please press the spacebar to continue."],
-    allow_backward: false, 
-    key_forward: 'spacebar'
-  }
 };
 
 
@@ -350,6 +461,10 @@ var recalibrationInstruction = {
   choices: ['spacebar'],
   post_trial_gap: 500,
 };
+
+/////////////////////////////////////////////
+/** Eyetracking Re-Calibration Parameters */
+////////////////////////////////////////////
 
 var recalibration = {
   timeline: [
@@ -390,10 +505,6 @@ var choiceInstructionReinforce = {
   } 
 }
 
-///////////////
-/** Practice */
-//////////////
-
 var fixation1 = {
   type: 'html-keyboard-response',
   on_start: () => document.body.style.cursor = 'none',
@@ -401,38 +512,6 @@ var fixation1 = {
   choices: jsPsych.NO_KEYS,
   trial_duration: fixation_duration,
 };
-
-var prac_choice_count = 0;
-var prac_choice = {
-  timeline: [
-    
-    fixation1,
-    {
-      type: "moral-binary-choice",
-      trial_number: () => prac_choice_count+1,
-      action: () =>   scenarios_practice[prac_choice_count],
-      number_fewer: () => [1,20,4][prac_choice_count],
-      number_more: () =>  [5,200,1][prac_choice_count],
-      items: () => items_practice[prac_choice_count],
-      action_top: action_top,
-      act_side: () => [1,2,1][prac_choice_count],
-      choices: ["F", "J"],
-      realOrCatch: 1,
-      timing_response: 0,
-      doEyeTracking: true,
-      realOrPrac: false,
-      on_finish: () => prac_choice_count++,
-    }
-  ],
-  loop_function: () => prac_choice_count < 3,
-};
-
-var instructionsReal = {
-  type: 'html-keyboard-response',
-  stimulus: `<div> Now you can move on to the real choices. When you are ready, press the <b>SPACEBAR</b> to begin.</div>`,
-  choices: ['spacebar'],
-  post_trial_gap: 500,
-}
 
 var binary_choice_states = {
   //set the default 
@@ -498,7 +577,7 @@ var fixation = {
 var if_node1 = {
   timeline: [fixation],
   conditional_function: function(){
-      if(Math.round(trial_count_untimed%10) == 0){
+      if(Math.round(trial_count_overall%10) == 0){
           return true;
       } else {
           return false;
@@ -509,7 +588,7 @@ var if_node1 = {
 var if_node2 = {
   timeline: [fixation1],
   conditional_function: function(){
-      if(Math.round(trial_count_untimed%10) != 0){
+      if(Math.round(trial_count_overall%10) != 0){
           return true;
       } else {
           return false;
@@ -517,91 +596,180 @@ var if_node2 = {
   }
 }
 
-///////////////////
-/** Real Trials */
-//////////////////
+///////////////////////////////
+/** Setup All Trial Counters */
+///////////////////////////////
 
-///////////////
-/** Untimed */
-//////////////
+var prac_choice_count = 0;
+var trial_count_overall = 0;
 
-var instructions_RealUntimed = {
-  data:{
-    screen_id: "instructions_real_untimed"
-  },
-  type: "instructions",
-  pages: ["In this part of the study, you should carefully consider your choices.  "+  
-  "Please press the spacebar to continue."
-  ],
-  allow_backward: false, 
-  key_forward: 'spacebar'
-}
-
-var trial_order_untimed = jsPsych.randomization.shuffle(Array.from(Array(ntrials/2).keys())).concat(jsPsych.randomization.shuffle(Array.from(Array(ntrials/2).keys())));
 var trial_count_untimed = 0;
-var act_side_untimed_vector = jsPsych.randomization.sampleWithReplacement([1,2], ntrials)
+var trial_count_timed = 0;
 
-//create untimed numbers
+//104 scenarios in each condition (each scenario repeated 4 times)
+var trial_order_untimed = ((jsPsych.randomization.shuffle(Array.from(Array(scenarios.length).keys())).concat(jsPsych.randomization.shuffle(Array.from(Array(scenarios.length).keys())))).concat(jsPsych.randomization.shuffle(Array.from(Array(scenarios.length).keys())))).concat(jsPsych.randomization.shuffle(Array.from(Array(scenarios.length).keys())));
+var trial_order_timed = ((jsPsych.randomization.shuffle(Array.from(Array(scenarios.length).keys())).concat(jsPsych.randomization.shuffle(Array.from(Array(scenarios.length).keys())))).concat(jsPsych.randomization.shuffle(Array.from(Array(scenarios.length).keys())))).concat(jsPsych.randomization.shuffle(Array.from(Array(scenarios.length).keys())));
+
+console.log(trial_order_untimed);
+console.log(trial_order_timed);
+
+////////////////////////
+/** Setup All Trials */
+///////////////////////
+
+//ntrials = 104
+var act_side_untimed_vector = jsPsych.randomization.sampleWithReplacement([1,2], ntrials)
+var act_side_timed_vector = jsPsych.randomization.sampleWithReplacement([1,2], ntrials)
+
 var number_fewer_untimed_vector = [];
 var number_more_untimed_vector = [];
+var number_fewer_timed_vector = [];
+var number_more_timed_vector = [];
 
-for (let i = 0; i <= ntrials-1; i++) {
+//ntrials = 104
+for (let i = 0; i < ntrials; i++) {
   number_fewer_untimed_vector.push(jsPsych.randomization.sampleWithoutReplacement([1,2,3,4,20], 1));
   if(number_fewer_untimed_vector[i]==1){
-    number_more_untimed_vector.push(jsPsych.randomization.sampleWithReplacement([2,5,10,50,100,200], 1))
+    number_more_untimed_vector.push(jsPsych.randomization.sampleWithReplacement([2,3,4,5,10,50], 1));
   }else if(number_fewer_untimed_vector[i]==2){
-    number_more_untimed_vector.push(jsPsych.randomization.sampleWithReplacement([5,10,50,100,200], 1))
+    number_more_untimed_vector.push(jsPsych.randomization.sampleWithReplacement([3,4,5,10,50], 1));
   }else if(number_fewer_untimed_vector[i]==3){
-    number_more_untimed_vector.push(jsPsych.randomization.sampleWithReplacement([5,10,50,100,200], 1))
+    number_more_untimed_vector.push(jsPsych.randomization.sampleWithReplacement([4,5,10,50], 1));
   }
   else if(number_fewer_untimed_vector[i]==4){
-    number_more_untimed_vector.push(jsPsych.randomization.sampleWithReplacement([5,10,50,100,200], 1))
+    number_more_untimed_vector.push(jsPsych.randomization.sampleWithReplacement([5,10,50], 1));
   }
   else{
-    number_more_untimed_vector.push(jsPsych.randomization.sampleWithReplacement([50,100,200], 1))
+    number_more_untimed_vector.push(jsPsych.randomization.sampleWithReplacement([50], 1));
   };
 }
 
-var catch_trial_untimed = jsPsych.randomization.shuffle(Array(ntrials-5).fill(1).concat(Array(5).fill(0)))
+for (let i = 0; i < ntrials; i++) {
+  number_fewer_timed_vector.push(jsPsych.randomization.sampleWithoutReplacement([1,2,3,4,20], 1));
+  if(number_fewer_timed_vector[i]==1){
+    number_more_timed_vector.push(jsPsych.randomization.sampleWithReplacement([2,3,4,5,10,50], 1));
+  }else if(number_fewer_timed_vector[i]==2){
+    number_more_timed_vector.push(jsPsych.randomization.sampleWithReplacement([3,4,5,10,50], 1));
+  }else if(number_fewer_timed_vector[i]==3){
+    number_more_timed_vector.push(jsPsych.randomization.sampleWithReplacement([4,5,10,50], 1));
+  }
+  else if(number_fewer_timed_vector[i]==4){
+    number_more_timed_vector.push(jsPsych.randomization.sampleWithReplacement([5,10,50], 1));
+  }
+  else{
+    number_more_timed_vector.push(jsPsych.randomization.sampleWithReplacement([50], 1));
+  };
+}
 
-var items_to_use_order_vector_untimed = jsPsych.randomization.shuffle(Array.from(Array(items_to_use.length).keys()));
+//10 percent catch trials
+//1 = real trial; 0 = catch trial
+var catch_trial_untimed = jsPsych.randomization.shuffle(Array(Math.round(ntrials-ntrials*.10)).fill(1).concat(Array(Math.round(ntrials*.10)).fill(0)))
+var catch_trial_timed = jsPsych.randomization.shuffle(Array(Math.round(ntrials-ntrials*.10)).fill(1).concat(Array(Math.round(ntrials*.10)).fill(0)))
 
-var choices_untimed = {
-  timeline: [ 
-    if_node1,
-    if_node2,
+//items
+var list_practice_pairs = [];
+for(var i = 0; i < items_practice.length/2; i++)
+     {
+        list_practice_pairs.push(
+        {M_index: items_practice[i].index,
+          M_name: items_practice[i].name,
+          M_singular: items_practice[i].singular,
+          M_plural: items_practice[i].plural,
+          M_general: items_practice[i].general,
+          M_numbermax: items_practice[i].number_max,
+          F_index: items_practice[i+3].index,
+          F_name: items_practice[i+3].name,
+          F_singular: items_practice[i+3].singular,
+          F_plural: items_practice[i+3].plural,
+          F_general: items_practice[i+3].general,
+          F_numbermax: items_practice[i+3].number_max}
+          );
+  };
+
+var list_all_pairsMF = [];
+var list_all_pairsFM = [];
+const distinctCat = [...new Set(items.map(x => x.category))];
+
+for(var i = 0; i < distinctCat.length; i++){
+
+  let items_this_cat = items.filter(obj => obj.category == distinctCat[i]);
+
+     for(var j = 0; j < items_this_cat.length - 1; j++)
+     {
+      for (let k = j + 1; k < items_this_cat.length; k++) {
+
+      list_all_pairsMF.push(
+        {M_index: items_this_cat[j].index,
+          M_name: items_this_cat[j].name,
+          M_singular: items_this_cat[j].singular,
+          M_plural: items_this_cat[j].plural,
+          M_general: items_this_cat[j].general,
+          //M_category: items_this_cat[j].category,
+          M_numbermax: items_this_cat[j].number_max,
+          F_index: items_this_cat[k].index,
+          F_name: items_this_cat[k].name,
+          F_singular: items_this_cat[k].singular,
+          F_plural: items_this_cat[k].plural,
+          F_general: items_this_cat[k].general,
+          //F_category: items_this_cat[k].category,
+          F_numbermax: items_this_cat[k].number_max}
+          );
+
+          list_all_pairsFM.push(
+            {M_index: items_this_cat[k].index,
+            M_name: items_this_cat[k].name,
+            M_singular: items_this_cat[k].singular,
+            M_plural: items_this_cat[k].plural,
+            M_general: items_this_cat[k].general,
+            //M_category: items_this_cat[k].category,
+            M_numbermax: items_this_cat[k].number_max,
+            F_index: items_this_cat[j].index,
+            F_name: items_this_cat[j].name,
+            F_singular: items_this_cat[j].singular,
+            F_plural: items_this_cat[j].plural,
+            F_general: items_this_cat[j].general,
+            //F_category: items_this_cat[j].category,
+            F_numbermax: items_this_cat[j].number_max}
+        );
+    }
+  }
+};
+
+var list_all_pairs = list_all_pairsMF.concat(list_all_pairsFM);
+list_all_pairs = jsPsych.randomization.sampleWithoutReplacement(list_all_pairs, ntrials*2);
+
+console.log(list_all_pairs);
+
+
+
+
+///////////////
+/** Practice */
+//////////////
+
+var prac_choice = {
+  timeline: [
+    fixation1,
     {
       type: "moral-binary-choice",
-      on_start: function(){
-        document.body.style.cursor = 'none';
-        //console.log(scenarios[trial_order_untimed[trial_count_untimed]]);
-        //console.log(number_fewer_untimed_vector[trial_count_untimed]);
-        //console.log(number_more_untimed_vector[trial_count_untimed]);
-        //console.log(act_side_untimed_vector[trial_count_untimed]);
-        //console.log(items_to_use[items_to_use_order_vector_untimed[trial_count_untimed]]);
-        //console.log(catch_trial_untimed[trial_count_untimed]);
-        console.log(trial_count_untimed);
-      },
-      trial_number: () => trial_count_untimed+1,
-      action: () =>   scenarios[trial_order_untimed[trial_count_untimed]],
-      number_fewer: () => number_fewer_untimed_vector[trial_count_untimed],
-      number_more: () => number_more_untimed_vector[trial_count_untimed],
-      items: () => items_to_use[items_to_use_order_vector_untimed[trial_count_untimed]],
+      overall_trial_number: 0,
+      condition_trial_number: () => prac_choice_count+1,
+      action: () =>   scenarios_practice[prac_choice_count],
+      number_fewer: () => [1,20,1][prac_choice_count],
+      number_more: () =>  [5,50,4][prac_choice_count],
+      items: () => list_practice_pairs[prac_choice_count],
       action_top: action_top,
-      act_side: () => act_side_untimed_vector[trial_count_untimed],
+      act_side: () => [1,2,2][prac_choice_count],
       choices: ["F", "J"],
-      realOrCatch: () => catch_trial_untimed[trial_count_untimed],
+      realOrCatch: () => [1,0,1][prac_choice_count],
       timing_response: 0,
       doEyeTracking: true,
-      realOrPrac: true,
-      on_finish: function() {
-        trial_count_untimed++;
-        //console.log(items);
-      },
+      realOrPrac: false,
+      data: { choice_type: 'practice'},
+      on_finish: () => prac_choice_count++,
     }
   ],
-  loop_function: () => trial_count_untimed < ntrials,
-
+  loop_function: () => prac_choice_count < 3,
 };
 
 
@@ -611,7 +779,7 @@ var choices_untimed = {
 
 var breaktime = {
   type: "html-keyboard-response",
-  stimulus: `<div>You are halfway done! Now you can take a short break if you want. You can move your head during the break.</br>
+  stimulus: `<div>Now, you can take a short break if you want. You can move your head during the break.</br>
              <br></br>
              When you are ready to continue, press the <b>SPACEBAR</b>.</div>`,
   choices: ['spacebar'],
@@ -633,9 +801,9 @@ var recalibrationInstruction2 = {
   post_trial_gap: 500,
 };
 
-
 var recalibration2 = {
   timeline: [
+    breaktime,
     recalibrationInstruction2,
     {
       type: "eye-tracking",
@@ -647,8 +815,115 @@ var recalibration2 = {
       validationDuration: 2,
     }
   ],
+  conditional_function: function(){
+    //at the end of each block 
+    //but not at the beg or end
+    //this means 3 times
+    if( (Math.round(trial_count_overall%(ntrials/2))) == 0 && (trial_count_overall != 0) && (trial_count_overall != ntrials*2)){
+        return true;
+    } else {
+        return false;
+    }
+}
 };
 
+
+///////////////////
+/** Real Trials */
+//////////////////
+
+var instructionsReal = {
+  type: 'html-keyboard-response',
+  stimulus: `<div> Now you can move on to the real choices. When you are ready, press the <b>SPACEBAR</b> to begin.</div>`,
+  choices: ['spacebar'],
+  post_trial_gap: 500,
+}
+
+///////////////
+/** Untimed */
+//////////////
+
+var instructions_RealUntimed = {
+  data:{
+    screen_id: "instructions_real_untimed"
+  },
+  type: "instructions",
+  pages: ["In this part of the study, you should carefully consider your choices.  "+  
+  "Please press the spacebar to continue."
+  ],
+  allow_backward: false, 
+  key_forward: 'spacebar'
+}
+
+var choices_untimed1 = {
+  timeline: [
+    if_node1,
+    if_node2,
+    {
+      type: "moral-binary-choice",
+      on_start: function(){
+        document.body.style.cursor = 'none';
+        console.log(scenarios[trial_order_untimed[trial_count_untimed]]);
+      },
+      overall_trial_number: () => trial_count_overall+1,
+      condition_trial_number: () => trial_count_untimed+1,
+      action: () =>   scenarios[trial_order_untimed[trial_count_untimed]],
+      number_fewer: () => number_fewer_untimed_vector[trial_count_untimed],
+      number_more: () => number_more_untimed_vector[trial_count_untimed],
+      items: () => list_all_pairs[trial_count_overall],
+      action_top: action_top,
+      act_side: () => act_side_untimed_vector[trial_count_untimed],
+      choices: ["F", "J"],
+      realOrCatch: () => catch_trial_untimed[trial_count_untimed],
+      timing_response: 0,
+      doEyeTracking: true,
+      realOrPrac: true,
+      data: { choice_type: 'untimed'},
+      on_finish: function() {
+        trial_count_untimed++;
+        trial_count_overall++;
+        //console.log(items);
+      },
+    },
+    recalibration2
+  ],
+  loop_function: () => trial_count_untimed < ntrials/nblocks,
+};
+
+var choices_untimed2 = {
+  timeline: [
+    if_node1,
+    if_node2,
+    {
+      type: "moral-binary-choice",
+      on_start: function(){
+        document.body.style.cursor = 'none';
+        console.log(scenarios[trial_order_untimed[trial_count_untimed]]);
+      },
+      overall_trial_number: () => trial_count_overall+1,
+      condition_trial_number: () => trial_count_untimed+1,
+      action: () =>   scenarios[trial_order_untimed[trial_count_untimed]],
+      number_fewer: () => number_fewer_untimed_vector[trial_count_untimed],
+      number_more: () => number_more_untimed_vector[trial_count_untimed],
+      items: () => list_all_pairs[trial_count_overall],
+      action_top: action_top,
+      act_side: () => act_side_untimed_vector[trial_count_untimed],
+      choices: ["F", "J"],
+      realOrCatch: () => catch_trial_untimed[trial_count_untimed],
+      timing_response: 0,
+      doEyeTracking: true,
+      realOrPrac: true,
+      data: { choice_type: 'untimed'},
+      on_finish: function() {
+        trial_count_untimed++;
+        trial_count_overall++;
+        //console.log(items);
+      },
+    },
+    recalibration2
+  ],
+  loop_function: () => trial_count_untimed < ntrials,
+};
 
 ///////////////
 /** Timed */
@@ -660,64 +935,29 @@ var instructions_RealTimed = {
   },
   type: "instructions",
   pages: ["In this part of the study, you should make your choices as  <font color = 'Tomato'>quickly</font> as you can.  "+
-  "You should try to make all of the decisions in 5 minutes.<br/><br/>" + 
+  "You should try to make all of the decisions in 4 minutes.  This means that you have about 2 seconds per decision. <br/><br/>" + 
   "Please press the <b>SPACEBAR</b> to continue."
   ],
   allow_backward: false, 
   key_forward: 'spacebar'
 }
 
-var trial_order_timed = jsPsych.randomization.shuffle(Array.from(Array(ntrials/2).keys())).concat(jsPsych.randomization.shuffle(Array.from(Array(ntrials/2).keys())));
-var trial_count_timed = 0;
-var act_side_timed_vector = jsPsych.randomization.sampleWithReplacement([1,2], ntrials)
-
-//create timed numbers
-var number_fewer_timed_vector = [];
-var number_more_timed_vector = [];
-
-for (let i = 0; i <= ntrials-1; i++) {
-  number_fewer_timed_vector.push(jsPsych.randomization.sampleWithoutReplacement([1,2,3,4,20], 1));
-  if(number_fewer_timed_vector[i]==1){
-    number_more_timed_vector.push(jsPsych.randomization.sampleWithReplacement([2,5,10,50,100,200], 1))
-  }else if(number_fewer_timed_vector[i]==2){
-    number_more_timed_vector.push(jsPsych.randomization.sampleWithReplacement([5,10,50,100,200], 1))
-  }else if(number_fewer_timed_vector[i]==3){
-    number_more_timed_vector.push(jsPsych.randomization.sampleWithReplacement([5,10,50,100,200], 1))
-  }
-  else if(number_fewer_timed_vector[i]==4){
-    number_more_timed_vector.push(jsPsych.randomization.sampleWithReplacement([5,10,50,100,200], 1))
-  }
-  else{
-    number_more_timed_vector.push(jsPsych.randomization.sampleWithReplacement([50,100,200], 1))
-  };
-};
-
-var catch_trial_timed = jsPsych.randomization.shuffle(Array(ntrials-5).fill(1).concat(Array(5).fill(0)))
-
-var items_to_use_order_vector_timed = jsPsych.randomization.shuffle(Array.from(Array(items_to_use.length).keys()));
-
-
-var choices_timed = {
+var choices_timed1 = {
   timeline: [ 
     if_node1,
     if_node2,
     {
       type: "moral-binary-choice",
       on_start: function(){
-        //document.body.style.cursor = 'none';
-        //console.log(scenarios[trial_order_timed[trial_count_timed]]);
-        //console.log(number_fewer_timed_vector[trial_count_timed]);
-        //console.log(number_more_timed_vector[trial_count_timed]);
-        //console.log(act_side_timed_vector[trial_count_timed]);
-        //console.log(items_to_use[items_to_use_order_vector_timed[trial_count_timed]]);
-        //console.log(catch_trial_timed[trial_count_timed]);
-        //console.log(trial_count_untimed);
+        document.body.style.cursor = 'none';
+        console.log(scenarios[trial_order_untimed[trial_count_untimed]]);
       },
-      trial_number: () => trial_count_timed+1,
+      overall_trial_number: () => trial_count_overall+1,
+      condition_trial_number: () => trial_count_timed+1,
       action: () =>   scenarios[trial_order_timed[trial_count_timed]],
       number_fewer: () => number_fewer_timed_vector[trial_count_timed],
       number_more: () => number_more_timed_vector[trial_count_timed],
-      items: () => items_to_use[items_to_use_order_vector_timed[trial_count_timed]],
+      items: () => list_all_pairs[trial_count_overall],
       action_top: action_top,
       act_side: () => act_side_timed_vector[trial_count_timed],
       choices: ["F", "J"],
@@ -725,26 +965,123 @@ var choices_timed = {
       timing_response: 0,
       doEyeTracking: true,
       realOrPrac: true,
+      data: { choice_type: 'timed'},
       on_finish: function() {
         trial_count_timed++;
+        trial_count_overall++;
         //console.log(items);
       },
-    }
+    },
+    recalibration2
+  ],
+  loop_function: () => trial_count_timed < ntrials/nblocks,
+};
+
+var choices_timed2 = {
+  timeline: [ 
+    if_node1,
+    if_node2,
+    {
+      type: "moral-binary-choice",
+      on_start: function(){
+        document.body.style.cursor = 'none';
+        console.log(scenarios[trial_order_untimed[trial_count_untimed]]);
+      },
+      overall_trial_number: () => trial_count_overall+1,
+      condition_trial_number: () => trial_count_timed+1,
+      action: () =>   scenarios[trial_order_timed[trial_count_timed]],
+      number_fewer: () => number_fewer_timed_vector[trial_count_timed],
+      number_more: () => number_more_timed_vector[trial_count_timed],
+      items: () => list_all_pairs[trial_count_overall],
+      action_top: action_top,
+      act_side: () => act_side_timed_vector[trial_count_timed],
+      choices: ["F", "J"],
+      realOrCatch:  () => catch_trial_timed[trial_count_timed],
+      timing_response: 0,
+      doEyeTracking: true,
+      realOrPrac: true,
+      data: { choice_type: 'timed'},
+      on_finish: function() {
+        trial_count_timed++;
+        trial_count_overall++;
+        //console.log(items);
+      },
+    },
+    recalibration2
   ],
   loop_function: () => trial_count_timed < ntrials,
-
 };
+
+////////////////////
+/** Item Ratings */
+///////////////////
+
+var ratings_items_instr = {
+  type: 'html-keyboard-response',
+  on_start:   () => document.body.style.cursor = 'none',
+  stimulus: `<div> <font size=120%; font color = 'green';>Rating of Actions</font><br/>
+                                       <br><br/>
+             In this part of the experiment, your task is to indicate how you would feel if a certain person or animal would die. <br/> 
+             For each action, please rate it on a scale from -100 to 0 based on how bad you would feel if they died.
+             <br><br/> 
+             -100 means that you would feel as bad as possible if they died.<br/> 
+             0 means that you would feel neither good nor bad if they died. <br/><br/> 
+             If you would feel good if they died, press the button that says Feel Good. 
+             <br><br/>
+             During the task, you need to use your mouse to move the slider to your desired rating. <br/> 
+                                          <br><br/>
+            When you are ready, press the  <b>SPACEBAR</b> to start.  </div>`,
+  choices: ['spacebar'],
+  post_trial_gap: 500,
+};
+
+var ratings_items_counter = 0;
+var ratings_items_order = jsPsych.randomization.shuffle(Array.from(Array(items.length).keys()));
+
+console.log(items[ratings_items_order[ratings_items_counter]].name);
+
+var ratings_items = {
+  timeline: [{
+    type: 'html-slider-response-moral-ratings',
+    on_start:   () => document.body.style.cursor = 'pointer',
+    trial: () => ratings_items_counter+1,
+    stimulus: () => items[ratings_items_order[ratings_items_counter]].name,
+    labels: ['-100','-80','-70','-60','-50','-40','-30','-20','-10','0'],
+    min: -100,
+    max: 0,
+    step: 1,
+    start: () => getRandomFloat(-100, 0),
+    prompt: `<div>Rate how you would feel if the following person or animal died?</div>`,
+    button_label_continue: 'Next',
+    button_label_skip: 'Feel Good',
+    require_movement: rating_req,
+    slider_width: 750,
+    response_ends_trial: true,
+    data: { choice_type: 'ratings_items'},
+    on_finish: () => {
+      ratings_items_counter++;
+    }
+}],
+loop_function: () => ratings_items_counter < items.length
+//loop_function: () => ratings_actions_counter < 3
+};
+
+
 
 //////////////////////
 /** Order of Phases */
 /////////////////////
 
 var trials_Untimed_First = {
-  timeline: [instructions_RealUntimed,
-    choices_untimed, 
-    breaktime, recalibration2, 
+  timeline: [
+    instructions_RealUntimed,
+    choices_untimed1, 
     instructions_RealTimed,
-  choices_timed],
+    choices_timed1,
+    instructions_RealUntimed,
+    choices_untimed2, 
+    instructions_RealTimed,
+    choices_timed2],
 
   conditional_function: function(){
       if(timed_first == 0){
@@ -755,11 +1092,15 @@ var trials_Untimed_First = {
   }
 }
 var trials_Timed_First = {
-  timeline: [instructions_RealTimed,
-    choices_timed, 
-    breaktime, recalibration2, 
+  timeline: [
+    instructions_RealTimed,
+    choices_timed1,  
     instructions_RealUntimed,
-    choices_untimed],
+    choices_untimed1,
+    instructions_RealTimed,
+    choices_timed2,  
+    instructions_RealUntimed,
+    choices_untimed2],
 
   conditional_function: function(){
       if(timed_first == 1){
@@ -769,224 +1110,6 @@ var trials_Timed_First = {
       }
   }
 }
-
-///////////////
-/** Ratings */
-//////////////
-
-//////////////////////
-/** Action Ratings */
-/////////////////////
-
-var ratings_overview = {
-  type: 'html-keyboard-response',
-  on_start:   function(){
-    webgazer.end();
-    document.body.style.cursor = 'pointer';
-  },
-  stimulus: `<div> <font size=120%; font color = 'green';>Rating Tasks</font><br/>
-                                       <br><br/>
-     Welcome to the next part of the experiment.  You can take a short break if you would like.<br/> 
-                                          <br><br/>
-            When you are ready, press the  <b>SPACEBAR</b> to start.  </div>`,
-  choices: ['spacebar'],
-  post_trial_gap: 500,
-};
-
-var ratings_actions_instr = {
-  type: 'html-keyboard-response',
-  on_start:   () => document.body.style.cursor = 'pointer',
-  stimulus: `<div> <font size=120%; font color = 'green';>Rating of Actions</font><br/>
-                                       <br><br/>
-             Now, your task is to indicate how you would feel if you had to take certain actions. <br/> 
-             For each action, please rate it on a scale from -100 to 100 based on how bad or good you would feel taking the action.
-             <br><br/> 
-             -100 means that you would feel as bad as possible if you were to take this action.<br/> 
-             0 means that you would feel neither good nor bad if you were to take this action. <br/> 
-             100 means that you would feel as good as possible if you were to take this action.
-             <br><br/>
-             During the task, you need to use your mouse to move the slider to your desired rating. <br/> 
-                                          <br><br/>
-            When you are ready, press the  <b>SPACEBAR</b> to start.  </div>`,
-  choices: ['spacebar'],
-  post_trial_gap: 500,
-};
-
-var ratings_means_instr = {
-  type: 'html-keyboard-response',
-  on_start:   () => document.body.style.cursor = 'pointer',
-  stimulus: `<div> <font size=120%; font color = 'green';>Rating of Ways to Die</font><br/>
-                                       <br><br/>
-                                       Now, your task is to indicate how you would feel if you saw someone die in a certain way. <br/> 
-                                       For each death, please rate it on a scale from -100 to 100 based on how bad or good you would feel seeing that death.
-                                       <br><br/>
-                                       -100 means that you would feel as bad as possible if you saw someone die in this way.  <br/> 
-                                       0 means that you would feel neither good nor bad if you saw someone die in this way. <br/> 
-                                       100 means that you would feel as good as possible if you saw someone die in this way.
-                                       <br><br/>
-                                       During the task, you need to use your mouse to move the slider to your desired rating. <br/> 
-                                          <br><br/>
-            When you are ready, press the  <b>SPACEBAR</b> to start.  </div>`,
-  choices: ['spacebar'],
-  post_trial_gap: 500,
-};
-
-var ratings_items_instr = {
-  type: 'html-keyboard-response',
-  on_start:   () => document.body.style.cursor = 'pointer',
-  stimulus: `<div> <font size=120%; font color = 'green';>Rating of Personal Value of Items</font><br/>
-                                       <br><br/>
-                                       Now, you will make decisions about the personal value of various items. <br/> 
-                                       For each item, please rate their personal value to you.  You can define “personal value” in any way you find appropriate. Personal value is not the same as monetary value. For example, we may ask the personal value of your first report card. Here, the monetary value may differ dramatically from the personal value. 
-                                       <br><br/>
-                                       Please enter this personal value in the box. <br/> 
-                                          <br><br/>
-            When you are ready, press the  <b>SPACEBAR</b> to start.  </div>`,
-  choices: ['spacebar'],
-  post_trial_gap: 500,
-};
-
-var ratings_items_societal_instr = {
-  type: 'html-keyboard-response',
-  on_start:   () => document.body.style.cursor = 'pointer',
-  stimulus: `<div> <font size=120%; font color = 'green';>Rating of Societal Value of Items</font><br/>
-                                       <br><br/>
-                                       Now, you will make decisions about the societal value of various items. <br/> 
-                                       For each item, please rate how valuable you think they are to society.
-                                       <br><br/>
-                                       Please enter this societal value in the box. <br/> 
-                                          <br><br/>
-            When you are ready, press the  <b>SPACEBAR</b> to start.  </div>`,
-  choices: ['spacebar'],
-  post_trial_gap: 500,
-};
-
-
-const distinctActions = [...new Set(scenarios.map(x => x.action))];
-var actions_to_rate = jsPsych.randomization.shuffle(distinctActions);
-var ratings_actions_counter = 0;
-
-
-var ratings_actions_task = {
-  timeline: [{
-    type: 'html-slider-response-moral-ratings',
-    on_start:   () => document.body.style.cursor = 'pointer',
-    stimulus: () => actions_to_rate[ratings_actions_counter],
-    labels: ['-100','-75','-50','-25','0','25','50','75','100'],
-    min: -100,
-    max: 100,
-    step: 1,
-    start: () => getRandomFloat(-100, 100),
-    prompt: `<div>Rate how you would feel if you had to take the following action?</div>`,
-    require_movement: rating_req,
-    slider_width: 750,
-    response_ends_trial: true,
-    on_finish: () => {
-      ratings_actions_counter++;
-    }
-}],
-loop_function: () => ratings_actions_counter < distinctActions.length
-//loop_function: () => ratings_actions_counter < 3
-};
-
-
-const distinctMeans = [...new Set(scenarios.map(x => x.means))];
-var means_to_rate = jsPsych.randomization.shuffle(distinctMeans);
-var ratings_means_counter = 0;
-
-var ratings_means_task = {
-  timeline: [{
-    type: 'html-slider-response-moral-ratings',
-    on_start:   () => document.body.style.cursor = 'pointer',
-    stimulus: () => means_to_rate[ratings_means_counter],
-    labels: ['-100','-75','-50','-25','0','25','50','75','100'],
-    min: -100,
-    max: 100,
-    step: 1,
-    start: () => getRandomFloat(-100, 100),
-    prompt: `<div>Rate how you would feel if you saw someone die in the following way?</div>`,
-    require_movement: rating_req,
-    slider_width: 750,
-    response_ends_trial: true,
-    on_finish: () => {
-      ratings_means_counter++;
-    }
-}],
-loop_function: () => ratings_means_counter < distinctMeans.length
-//loop_function: () => ratings_means_counter < 3
-};
-
-var ratings_items_counter = 0;
-var ratings_items_order = jsPsych.randomization.shuffle(Array.from(Array(items.length).keys()));
-
-var ratings_items_task = {
-  timeline: [{
-    type: 'enter-text',
-    on_start:   () => document.body.style.cursor = 'pointer',
-    stimulus: ()=> items[ratings_items_order[ratings_items_counter]].name,
-    prompt: `<div>What is your personal value of the following item?</div>`,
-    on_finish: () => {
-      ratings_items_counter++;
-    }
-  }],
-  loop_function: () => ratings_items_counter < items.length
-  //loop_function: () => ratings_items_counter < 3
-}
-  
-
-var ratings_items_counter_societal = 0;
-var ratings_items_order_societal = jsPsych.randomization.shuffle(Array.from(Array(items.length).keys()));
-
-var ratings_items_societal_task = {
-  timeline: [{
-    type: 'enter-text',
-    on_start:   () => document.body.style.cursor = 'pointer',
-    stimulus: ()=> items[ratings_items_order_societal[ratings_items_counter_societal]].name,
-    prompt: `<div>What is the societal value of the following item?</div>`,
-    on_finish: () => {
-      ratings_items_counter_societal++;
-    }
-  }],
-  loop_function: () => ratings_items_counter < items.length
-  //loop_function: () => ratings_items_counter_societal < 3
-}
-
-///////////////////////
-/** Order of Ratings */
-//////////////////////
-
-var ratings_actions_items_means = {
-  timeline: [ratings_actions_instr, ratings_actions_task,
-    ratings_items_instr, ratings_items_task,
-    ratings_means_instr, ratings_means_task,
-    ratings_items_societal_instr, ratings_items_societal_task],
-
-  conditional_function: function(){
-      if(ratings_order == 1){
-          return true;
-      } else {
-          return false;
-      }
-  }
-}
-
-var ratings_means_items_actions = {
-  timeline: [ratings_means_instr, ratings_means_task,
-    ratings_items_instr, ratings_items_task,
-    ratings_actions_instr, ratings_actions_task,
-    ratings_items_societal_instr, ratings_items_societal_task],
-
-  conditional_function: function(){
-      if(ratings_order == 2){
-          return true;
-      } else {
-          return false;
-      }
-  }
-}
-
-
-
 
 /***********************/
 /******** Survey *******/
@@ -1078,12 +1201,14 @@ function startExperiment() {
     timeline: [
       fullscreenEnter,
       eyeTrackingInstruction1,eyeTrackingInstruction2, inital_eye_calibration,
-      experimentOverview,choiceOverview,instructions_examples,
+      experimentOverview,
+      ratings_instr, ratings_task,
+      choiceOverview,instructions_examples,
       recalibration,
       choiceInstructionReinforce,
       prac_choice,
-     instructionsReal,trials_Untimed_First,trials_Timed_First,
-     ratings_overview,ratings_actions_items_means, ratings_means_items_actions,
+      instructionsReal,trials_Untimed_First,trials_Timed_First,
+     ratings_items_instr, ratings_items,
      demographic_survey,
     debriefing_page,
     success_guard
@@ -1103,7 +1228,7 @@ function startExperiment() {
         jsPsych.data.reset();
       }
     },
-    preload: [instruct_img, practice_images],
+    preload: [instruct_img],
     on_finish: () => on_finish_callback(),
     on_close: () => on_finish_callback()
 

@@ -4,14 +4,30 @@
     grid-template-rows: 20vh 20vh;
     align-content: center;
     justify-content: center;
-    grid-gap: 60vh 10vw;
-    padding: 0;
+    grid-gap: 40vh 10vw;
+    padding: 10vh 15vw;
   }
   
   .grid-container > div {
     text-align: center;
     padding: 8.7vh; 
     font-size: 2.5vh;
+  }
+
+  .grid-container-instr {
+    display: grid;
+    grid-template-columns: 45vw 45vw;
+    grid-template-rows: 20vh 20vh;
+    align-content: center;
+    justify-content: center;
+    grid-gap: 5vh 5vw;
+    padding: 2vh 2vw;
+  }
+  
+  .grid-container-instr > div {
+    text-align: center;
+    padding: 2vh; 
+    font-size: 2vh;
   }
 
   .timeoutinfo{
