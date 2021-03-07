@@ -374,8 +374,8 @@ new_html += '</div>';
     clearInterval(eye_tracking_interval); }
       // data saving
       var trial_data = {
-        "overall_trial_number": trial.overal_trial_number,
-        "condition_trial_number": trial.trial_number,
+        "overall_trial_number": trial.overall_trial_number,
+        "condition_trial_number": trial.condition_trial_number,
         "rt": response.rt,
         "key_press": response.key,
         "choices": trial.choices,
