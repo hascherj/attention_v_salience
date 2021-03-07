@@ -387,15 +387,15 @@ new_html += '</div>';
         "action_top": trial.action_top,
         "act_side": trial.act_side,
 
-        "number_fewer": trial.n_fewer,
-        "number_more": trial.n_more,
-        "item_fewer": trial.items.singular,
-        "item_more": trial.items.singular,
+        "number_fewer": n_fewer,
+        "number_more": n_more,
+        "item_fewer": trial.items.F_singular,
+        "item_more": trial.items.M_singular,
 
-        "UL": trial.UL,
-        "LL": trial.LL,
-        "UR": trial.UR,
-        "LR": trial.LR,
+        "UL": UL,
+        "LL": LL,
+        "UR": UR,
+        "LR": LR,
 
         "eyeData": JSON.stringify(eyeData),
         "realOrCatch": trial.realOrCatch,
