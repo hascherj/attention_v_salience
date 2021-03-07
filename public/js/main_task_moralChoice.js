@@ -86,10 +86,10 @@ var subject_id = jsPsych.randomization.randomID(7);
 var experiment_code = 'mc_';
 subject_id = experiment_code + subject_id;
 
-var action_top = jsPsych.randomization.sampleWithoutReplacement([1,2], 1);
+var action_top = jsPsych.randomization.sampleWithoutReplacement([1,2], 1)[0];
 
 //if the untimed is first, or timed is first
-var timed_first = jsPsych.randomization.sampleWithoutReplacement([0,1], 1);
+var timed_first = jsPsych.randomization.sampleWithoutReplacement([0,1], 1)[0];
 
 /////////////////////////
 /** Add Subject Info **/
@@ -100,7 +100,7 @@ jsPsych.data.addProperties({
   date: DATE,
   subid_date: subject_id + DATE,
   action_top: action_top,
-  timed_order: timed_first
+  timed_first: timed_first
 });
 
 //////////////////

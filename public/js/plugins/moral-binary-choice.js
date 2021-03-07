@@ -242,7 +242,7 @@ console.log(number_more_words);
 
 
 //set up text in each quadrant
-if (action_top == 1 && trial.act_side == 1){
+if (trial.action_top == 1 && trial.act_side == 1){
 //action on top & outcome on bottom
 //act on left & in action right
 
@@ -254,7 +254,7 @@ if (action_top == 1 && trial.act_side == 1){
   var LL = fewer_line;
   var LR = more_line;
 
-} else if (action_top == 1 && trial.act_side == 2){
+} else if (trial.action_top == 1 && trial.act_side == 2){
 //action on top & outcome on bottom
 //act on right & in action left
 
@@ -266,7 +266,7 @@ var UL = inaction_line;
 var LR = fewer_line;
 var LL = more_line;
   
-} else if (action_top == 2 && trial.act_side == 1){
+} else if (trial.action_top == 2 && trial.act_side == 1){
   //action on bottom & outcome on top
 //act on left & in action right
 
@@ -278,7 +278,7 @@ var LR = inaction_line;
 var UL = fewer_line;
 var UR = more_line;
   
-} else if (action_top == 2 && trial.act_side == 2){
+} else if (trial.action_top == 2 && trial.act_side == 2){
 //action on bottom & outcome on top
 //act on right & in action left
 
@@ -290,6 +290,15 @@ var LL = inaction_line;
 var UR = fewer_line;
 var UL = more_line;
 };
+
+//get new variables ready for output
+trial.n_fewer = n_fewer;
+trial.n_more = n_more;
+
+trial.LR = LR;
+trial.LL = LL;
+trial.UR = UR;
+trial.UL = UL;
 
 
 //show the text
@@ -384,7 +393,6 @@ new_html += '</div>';
         "action": trial.action.act,
         "inaction": trial.action.dont_act,
 
-        "action_top": trial.action_top,
         "act_side": trial.act_side,
 
         "number_fewer": trial.n_fewer,
