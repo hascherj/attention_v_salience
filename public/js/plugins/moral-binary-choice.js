@@ -292,8 +292,8 @@ var UL = more_line;
 };
 
 //get new variables ready for output
-trial.n_fewer = n_fewer;
-trial.n_more = n_more;
+trial.n_fewer = n_fewer[0];
+trial.n_more = n_more[0];
 
 trial.LR = LR;
 trial.LL = LL;
