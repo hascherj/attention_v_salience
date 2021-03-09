@@ -389,7 +389,7 @@ new_html += '</div>';
         "key_press": response.key,
         "choices": trial.choices,
 
-        "scenario": trial.action.name,
+        "scenario": trial.action.full,
         "action": trial.action.act,
         "inaction": trial.action.dont_act,
 
@@ -399,6 +399,8 @@ new_html += '</div>';
         "number_more": trial.n_more,
         "item_fewer": trial.items.F_singular,
         "item_more": trial.items.M_singular,
+        "item_fewer_name": trial.items.F_name,
+        "item_more_name": trial.items.M_name,
 
         "UL": trial.UL,
         "LL": trial.LL,
