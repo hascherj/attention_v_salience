@@ -1208,7 +1208,7 @@ function startExperiment() {
       choiceInstructionReinforce,
       prac_choice,
       instructionsReal,trials_Untimed_First,trials_Timed_First,
-     //ratings_items_instr, ratings_items,
+     ratings_items_instr, ratings_items,
      demographic_survey,
     debriefing_page,
     success_guard
