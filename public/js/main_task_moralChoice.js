@@ -174,10 +174,10 @@ var eyeTrackingNote = {
              <br><br/>
              <div style="text-align-last:left">
             In addition to the tips in the figure: <br/>
-            (1). Use your eyes to look around the screen and try to avoid moving your head. <br/>
-            (2). Try to keep lights in front of you rather than behind you so that the webcam can clearly see your face. Avoid sitting with a window behind you. <br/>
-            (3). After you have made these adjustments, check again that your face fits nicely within the box on the video feed and that the box is green. <br/>
-            (4). Turn up the brightness on your screen.</div>
+            (1) Use your eyes to look around the screen and try to avoid moving your head. <br/>
+            (2) Try to keep lights in front of you rather than behind you so that the webcam can clearly see your face. Avoid sitting with a window behind you. <br/>
+            (3) After you have made these adjustments, check again that your face fits nicely within the box on the video feed and that the box is green. <br/>
+            (4) Turn up the brightness on your screen.</div>
              <br><br/>
              <font size=5px; font color = 'red';> <b>NOTE</b>:  <br/>
             If you are back on this page, it means the calibration and validation did not work as well as we would like.  <br/>
@@ -262,6 +262,42 @@ var experimentOverview = {
 ///////////////
 /** Ratings */
 //////////////
+const distinctScenarios = [...new Set(scenarios.map(x => x.full))];
+var scenarios_to_rate = jsPsych.randomization.shuffle(distinctScenarios);
+var scenarios_slideshow = jsPsych.randomization.shuffle(distinctScenarios);
+
+var slideshow_counter = 0;
+var ratings_counter = 0;
+
+var slideshow_instr = {
+  type: 'html-keyboard-response',
+  on_start:   () => document.body.style.cursor = 'none',
+  stimulus: `<div> <font size=120%; font color = 'green';>Rating of Actions</font><br/>
+                                       <br><br/>
+             In this part of the experiment, your task is to indicate how you would feel if you had to take certain actions on an acquaintance. <br/> 
+             <br><br/> 
+             First, you will see a slideshow of all actions that you will be rating. You will automatically proceed to the next action. After you see all of the actions, you will move onto the rating task.
+             <br><br/>
+                                          <br><br/>
+            When you are ready, press the  <b>SPACEBAR</b> to start.  </div>`,
+  choices: ['spacebar'],
+  post_trial_gap: 500,
+};
+
+var slideshow = {
+  timeline: [{
+    type: 'html-slideshow-keyboard-response',
+    on_start:   () => document.body.style.cursor = 'none',
+    trial: () => slideshow_counter+1,
+    stimulus: () => scenarios_slideshow[slideshow_counter],
+    trial_duration: 2000,
+    data: { choice_type: 'slideshow'},
+    on_finish: () => {
+      slideshow_counter++;
+    }
+}],
+loop_function: () => slideshow_counter < distinctScenarios.length
+};
 
 var ratings_instr = {
   type: 'html-keyboard-response',
@@ -269,7 +305,7 @@ var ratings_instr = {
   stimulus: `<div> <font size=120%; font color = 'green';>Rating of Actions</font><br/>
                                        <br><br/>
              In this part of the experiment, your task is to indicate how you would feel if you had to take certain actions. <br/> 
-             For each action, please rate it on a scale from -100 to 0 based on how bad you would feel taking the action.
+             For each action, please rate it on a scale from -100 to 0 based on how bad you would feel taking the action on an acquaintance.
              <br><br/> 
              -100 means that you would feel as bad as possible if you were to take this action.<br/> 
              0 means that you would feel neither good nor bad if you were to take this action. <br/><br/> 
@@ -281,10 +317,6 @@ var ratings_instr = {
   choices: ['spacebar'],
   post_trial_gap: 500,
 };
-
-const distinctScenarios = [...new Set(scenarios.map(x => x.full))];
-var scenarios_to_rate = jsPsych.randomization.shuffle(distinctScenarios);
-var ratings_counter = 0;
 
 var ratings_task = {
   timeline: [{
@@ -484,7 +516,7 @@ var choiceInstructionReinforce = {
   stimulus: `<div><font size=120%; font color = 'green';>Instructions</font><br/>
                                         <br><br/>
        Now, we will begin. Please keep your head still, otherwise we may have to redo the calibration and validation.<br/>
-       There will be a break halfway through. During the break you can move your head if you need to.    <br/>
+       There will be a break halfway through. During the break you can move your head if you need to.    <br><br/>
        Remember, you are indicating what you SHOULD do in each scenarios: <br/>
        If you think you SHOULD take the action on the left, press the <b><font color='green'>F</font></b> key; <br/>
        If you think you SHOULD take the action on the right, press the <b><font color='green'>J</font></b>  key;<br/>
@@ -872,7 +904,7 @@ var instructions_RealTimed = {
     screen_id: "instructions_real_timed"
   },
   type: "instructions",
-  pages: ["In this part of the study, you should make your choices as  <font color = 'Tomato'>quickly</font> as you can.  "+
+  pages: ["In this part of the study, you should make your choices as  <font color = 'Tomato'>very quickly</font> as you can.  "+
   "You should try to make ALL of the decisions in just 1 minute.  This means that you have about 4 seconds per decision. <br/><br/>" + 
   "Please press the <b>SPACEBAR</b> to continue."
   ],
@@ -1094,6 +1126,7 @@ function startExperiment() {
       fullscreenEnter,
       eyeTrackingInstruction1,eyeTrackingInstruction2, inital_eye_calibration,
       experimentOverview,
+      slideshow_instr, slideshow,
       ratings_instr, ratings_task,
       choiceOverview,instructions_examples,
       recalibration,
