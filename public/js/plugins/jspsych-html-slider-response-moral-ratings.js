@@ -147,10 +147,6 @@ jsPsych.plugins['html-slider-response-moral-ratings'] = (function() {
            html += `<div></br><span style="float: left; font-size: 80%;"> \u27f5 feel as bad as possible</span>`;
            html += `<span style="float: right; font-size: 80%;">feel neither good nor bad \u27f6 </span></div>`;
 
-
-
-
-
     html += '</div>';
     html += '</div>';
     html += '</div>';
@@ -191,7 +187,7 @@ jsPsych.plugins['html-slider-response-moral-ratings'] = (function() {
       // measure response time
       var endTime = performance.now();
       response.rt = endTime - startTime;
-      response.response = -1;
+      response.response = 0;
 
       if(trial.response_ends_trial){
         end_trial();

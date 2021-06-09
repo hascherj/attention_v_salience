@@ -9,16 +9,13 @@
 /** Reminders **/
 /////////////////
 //turn on all timeline
-//trials (=scenarios.length*4)
 
 /**************/
 /** Constants */
 /**************/
 
-const ntrials = scenarios.length*4; //trials per condition (see each scenario 4 times in each condition)
-//const ntrials = 5*4 //20 per condition (40 in totalover 4 blocks)
+const ntrials = (scenarios.length*1)/2; //number of trials per condition
 
-const nblocks = 2;  //blocks per condiiton (divide the condition into two blocks)
 const rating_req = true;
 const fixation_duration = 500;
 const npractice = 3;
@@ -300,7 +297,7 @@ var ratings_task = {
     max: 0,
     step: 1,
     start: () => getRandomFloat(-100, 0),
-    prompt: `<div>Rate how you would feel if you had to take the following action?</div>`,
+    prompt: `<div>Rate how you would feel if you had to take the following action on an acquaintance?</div>`,
     button_label_continue: 'Next',
     button_label_skip: 'Feel Good',
     require_movement: rating_req,
@@ -577,7 +574,7 @@ var fixation = {
 var if_node1 = {
   timeline: [fixation],
   conditional_function: function(){
-      if(Math.round(trial_count_overall%10) == 0){
+      if(Math.round(trial_count_overall%5) == 0){
           return true;
       } else {
           return false;
@@ -588,7 +585,7 @@ var if_node1 = {
 var if_node2 = {
   timeline: [fixation1],
   conditional_function: function(){
-      if(Math.round(trial_count_overall%10) != 0){
+      if(Math.round(trial_count_overall%5) != 0){
           return true;
       } else {
           return false;
@@ -606,18 +603,20 @@ var trial_count_overall = 0;
 var trial_count_untimed = 0;
 var trial_count_timed = 0;
 
-//104 scenarios in each condition (each scenario repeated 4 times)
-var trial_order_untimed = ((jsPsych.randomization.shuffle(Array.from(Array(scenarios.length).keys())).concat(jsPsych.randomization.shuffle(Array.from(Array(scenarios.length).keys())))).concat(jsPsych.randomization.shuffle(Array.from(Array(scenarios.length).keys())))).concat(jsPsych.randomization.shuffle(Array.from(Array(scenarios.length).keys())));
-var trial_order_timed = ((jsPsych.randomization.shuffle(Array.from(Array(scenarios.length).keys())).concat(jsPsych.randomization.shuffle(Array.from(Array(scenarios.length).keys())))).concat(jsPsych.randomization.shuffle(Array.from(Array(scenarios.length).keys())))).concat(jsPsych.randomization.shuffle(Array.from(Array(scenarios.length).keys())));
+//all 26 scenarios randomized
+var trial_order = jsPsych.randomization.shuffle(Array.from(Array(scenarios.length).keys()))
 
-console.log(trial_order_untimed);
-console.log(trial_order_timed);
+//var trial_order_untimed = jsPsych.randomization.shuffle(Array.from(Array(scenarios.length).keys()))
+//var trial_order_timed = jsPsych.randomization.shuffle(Array.from(Array(scenarios.length).keys()))
+
+//console.log(trial_order_untimed);
+//console.log(trial_order_timed);
 
 ////////////////////////
 /** Setup All Trials */
 ///////////////////////
 
-//ntrials = 104
+//ntrials = 13
 var act_side_untimed_vector = jsPsych.randomization.sampleWithReplacement([1,2], ntrials)
 var act_side_timed_vector = jsPsych.randomization.sampleWithReplacement([1,2], ntrials)
 
@@ -626,7 +625,7 @@ var number_more_untimed_vector = [];
 var number_fewer_timed_vector = [];
 var number_more_timed_vector = [];
 
-//ntrials = 104
+//ntrials = 13
 for (let i = 0; i < ntrials; i++) {
   number_fewer_untimed_vector.push(jsPsych.randomization.sampleWithoutReplacement([1,2,3,4,20], 1));
   if(number_fewer_untimed_vector[i]==1){
@@ -801,31 +800,6 @@ var recalibrationInstruction2 = {
   post_trial_gap: 500,
 };
 
-var recalibration2 = {
-  timeline: [
-    breaktime,
-    recalibrationInstruction2,
-    {
-      type: "eye-tracking",
-      doCalibration: true,
-      calibrationDots: realCaliDot, ///change to 12
-      calibrationDuration: 3,
-      doValidation: true, 
-       validationDots:  8, ///change to 6
-      validationDuration: 2,
-    }
-  ],
-  conditional_function: function(){
-    //at the end of each block 
-    //but not at the beg or end
-    //this means 3 times
-    if( (Math.round(trial_count_overall%(ntrials/2))) == 0 && (trial_count_overall != 0) && (trial_count_overall != ntrials*2)){
-        return true;
-    } else {
-        return false;
-    }
-}
-};
 
 
 ///////////////////
@@ -863,11 +837,11 @@ var choices_untimed1 = {
       type: "moral-binary-choice",
       on_start: function(){
         document.body.style.cursor = 'none';
-        console.log(scenarios[trial_order_untimed[trial_count_untimed]]);
+        console.log(scenarios[trial_order[trial_count_overall]]);
       },
       overall_trial_number: () => trial_count_overall+1,
       condition_trial_number: () => trial_count_untimed+1,
-      action: () =>   scenarios[trial_order_untimed[trial_count_untimed]],
+      action: () =>   scenarios[trial_order[trial_count_overall]],
       number_fewer: () => number_fewer_untimed_vector[trial_count_untimed],
       number_more: () => number_more_untimed_vector[trial_count_untimed],
       items: () => list_all_pairs[trial_count_overall],
@@ -884,43 +858,7 @@ var choices_untimed1 = {
         trial_count_overall++;
         //console.log(items);
       },
-    },
-    recalibration2
-  ],
-  loop_function: () => trial_count_untimed < ntrials/nblocks,
-};
-
-var choices_untimed2 = {
-  timeline: [
-    if_node1,
-    if_node2,
-    {
-      type: "moral-binary-choice",
-      on_start: function(){
-        document.body.style.cursor = 'none';
-        console.log(scenarios[trial_order_untimed[trial_count_untimed]]);
-      },
-      overall_trial_number: () => trial_count_overall+1,
-      condition_trial_number: () => trial_count_untimed+1,
-      action: () =>   scenarios[trial_order_untimed[trial_count_untimed]],
-      number_fewer: () => number_fewer_untimed_vector[trial_count_untimed],
-      number_more: () => number_more_untimed_vector[trial_count_untimed],
-      items: () => list_all_pairs[trial_count_overall],
-      action_top: action_top,
-      act_side: () => act_side_untimed_vector[trial_count_untimed],
-      choices: ["F", "J"],
-      realOrCatch: () => catch_trial_untimed[trial_count_untimed],
-      timing_response: 0,
-      doEyeTracking: true,
-      realOrPrac: true,
-      data: { choice_type: 'untimed'},
-      on_finish: function() {
-        trial_count_untimed++;
-        trial_count_overall++;
-        //console.log(items);
-      },
-    },
-    recalibration2
+    }
   ],
   loop_function: () => trial_count_untimed < ntrials,
 };
@@ -935,7 +873,7 @@ var instructions_RealTimed = {
   },
   type: "instructions",
   pages: ["In this part of the study, you should make your choices as  <font color = 'Tomato'>quickly</font> as you can.  "+
-  "You should try to make all of the decisions in 4 minutes.  This means that you have about 2 seconds per decision. <br/><br/>" + 
+  "You should try to make ALL of the decisions in just 1 minute.  This means that you have about 4 seconds per decision. <br/><br/>" + 
   "Please press the <b>SPACEBAR</b> to continue."
   ],
   allow_backward: false, 
@@ -950,11 +888,11 @@ var choices_timed1 = {
       type: "moral-binary-choice",
       on_start: function(){
         document.body.style.cursor = 'none';
-        console.log(scenarios[trial_order_untimed[trial_count_untimed]]);
+        console.log(scenarios[trial_order[trial_count_overall]]);
       },
       overall_trial_number: () => trial_count_overall+1,
       condition_trial_number: () => trial_count_timed+1,
-      action: () =>   scenarios[trial_order_timed[trial_count_timed]],
+      action: () =>   scenarios[trial_order[trial_count_overall]],
       number_fewer: () => number_fewer_timed_vector[trial_count_timed],
       number_more: () => number_more_timed_vector[trial_count_timed],
       items: () => list_all_pairs[trial_count_overall],
@@ -971,43 +909,7 @@ var choices_timed1 = {
         trial_count_overall++;
         //console.log(items);
       },
-    },
-    recalibration2
-  ],
-  loop_function: () => trial_count_timed < ntrials/nblocks,
-};
-
-var choices_timed2 = {
-  timeline: [ 
-    if_node1,
-    if_node2,
-    {
-      type: "moral-binary-choice",
-      on_start: function(){
-        document.body.style.cursor = 'none';
-        console.log(scenarios[trial_order_untimed[trial_count_untimed]]);
-      },
-      overall_trial_number: () => trial_count_overall+1,
-      condition_trial_number: () => trial_count_timed+1,
-      action: () =>   scenarios[trial_order_timed[trial_count_timed]],
-      number_fewer: () => number_fewer_timed_vector[trial_count_timed],
-      number_more: () => number_more_timed_vector[trial_count_timed],
-      items: () => list_all_pairs[trial_count_overall],
-      action_top: action_top,
-      act_side: () => act_side_timed_vector[trial_count_timed],
-      choices: ["F", "J"],
-      realOrCatch:  () => catch_trial_timed[trial_count_timed],
-      timing_response: 0,
-      doEyeTracking: true,
-      realOrPrac: true,
-      data: { choice_type: 'timed'},
-      on_finish: function() {
-        trial_count_timed++;
-        trial_count_overall++;
-        //console.log(items);
-      },
-    },
-    recalibration2
+    }
   ],
   loop_function: () => trial_count_timed < ntrials,
 };
@@ -1074,14 +976,9 @@ loop_function: () => ratings_items_counter < items.length
 
 var trials_Untimed_First = {
   timeline: [
-    instructions_RealUntimed,
-    choices_untimed1, 
-    instructions_RealTimed,
-    choices_timed1,
-    instructions_RealUntimed,
-    choices_untimed2, 
-    instructions_RealTimed,
-    choices_timed2],
+    instructions_RealUntimed,choices_untimed1, 
+    breaktime, recalibrationInstruction2,
+    instructions_RealTimed, choices_timed1],
 
   conditional_function: function(){
       if(timed_first == 0){
@@ -1093,14 +990,9 @@ var trials_Untimed_First = {
 }
 var trials_Timed_First = {
   timeline: [
-    instructions_RealTimed,
-    choices_timed1,  
-    instructions_RealUntimed,
-    choices_untimed1,
-    instructions_RealTimed,
-    choices_timed2,  
-    instructions_RealUntimed,
-    choices_untimed2],
+    instructions_RealTimed, choices_timed1,  
+    breaktime, recalibrationInstruction2,
+    instructions_RealUntimed, choices_untimed1],
 
   conditional_function: function(){
       if(timed_first == 1){
@@ -1118,7 +1010,7 @@ var trials_Timed_First = {
 var demographic_survey = {
   type: 'survey-text',
   questions: [
-    {prompt: "What is your gender?", rows: 2, columns:50 , required:true}, 
+    {prompt: "What is your gender?", rows: 1, columns:50 , required:true}, 
     {prompt: "What is your age?", rows: 1, columns: 50, required:true},
     {prompt: "What is your first language?", rows: 1, columns: 50, require: false},
     {prompt: "What is your name (only used to assign REP credit)?", rows: 1, columns: 50, require: false},

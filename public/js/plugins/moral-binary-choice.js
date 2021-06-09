@@ -307,7 +307,10 @@ new_html += `<div id="UL">${UL}</div>`;
 new_html += `<div id="UR">${UR}</div>`;
 new_html += `<div id="LL">${LL}</div>`;
 new_html += `<div id="LR">${LR}</div>`;
-new_html += '</div>';
+new_html += '</div>'
+
+
+
 
       display_element.innerHTML = new_html;
     };
