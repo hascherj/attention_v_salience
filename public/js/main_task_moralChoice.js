@@ -108,7 +108,7 @@ jsPsych.data.addProperties({
 var fullscreenEnter = {
   type: 'fullscreen',
   message: `<div> 
-  Welcome to the study! For participating in this study you will receive 1 hour of REP credit. <br/>
+  Welcome to the study! For participating in this study you will receive 0.5 hour of REP credit. <br/>
   Before we begin, please close any unnecessary programs or applications on your computer. <br/>
   This will help the study run more smoothly.    <br/><br/>
    Also, please close any browser tabs that could produce popups or alerts that would interfere with the study.    <br/>
