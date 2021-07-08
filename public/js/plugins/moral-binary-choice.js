@@ -436,6 +436,10 @@ new_html += '</div>'
           var relativePosY = pos.y/screen.height;
           var relativePosX2= pos.x/innerWidth ;
           var relativePosY2 = pos.y/innerHeight;
+
+          //console.log(relativePosX);
+          console.log(relativePosY);
+
           eyeData.history.push({
            // 'x': pos.x,
           //  'y': pos.y,

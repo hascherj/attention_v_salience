@@ -783,6 +783,10 @@ var prac_choice = {
     fixation1,
     {
       type: "moral-binary-choice",
+      on_start: function(){
+        document.body.style.cursor = 'none';
+        //console.log(data);
+      },
       overall_trial_number: 0,
       condition_trial_number: () => prac_choice_count+1,
       action: () =>   scenarios_practice[prac_choice_count],
@@ -1126,8 +1130,8 @@ function startExperiment() {
       fullscreenEnter,
       eyeTrackingInstruction1,eyeTrackingInstruction2, inital_eye_calibration,
       experimentOverview,
-      slideshow_instr, slideshow,
-      ratings_instr, ratings_task,
+      //slideshow_instr, slideshow,
+      //ratings_instr, ratings_task,
       choiceOverview,instructions_examples,
       recalibration,
       choiceInstructionReinforce,
