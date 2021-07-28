@@ -9,6 +9,7 @@
 /** Reminders **/
 /////////////////
 //turn on all timeline
+//VX refers to more variable side, SP refers to more rewarding side
 
 /**************/
 /** Constants */
@@ -28,6 +29,277 @@ var DD = String(TODAY.getDate()).padStart(2,"0");
 var MM = String(TODAY.getMonth() + 1).padStart(2,"0");
 var YYYY = TODAY.getFullYear();
 const DATE = MM + DD + YYYY;
+
+/////////////////////
+/** Create Stimuli */
+/////////////////////
+
+
+which_first = (Math.random() < 0.5);
+
+
+/*Example Stimuli - for testing code*/
+var stim_SP_more = [
+  {
+    type: "SP",
+    more_less: "more",
+    self_amt: 8,
+    other_amt: 2
+  },
+  {
+    type: "SP",
+    more_less: "more",
+    self_amt: 8,
+    other_amt: 2
+  },{
+    type: "SP",
+    more_less: "more",
+    self_amt: 8,
+    other_amt: 2
+  },{
+    type: "SP",
+    more_less: "more",
+    self_amt: 7,
+    other_amt: 3
+  },{
+    type: "SP",
+    more_less: "more",
+    self_amt: 7,
+    other_amt: 3
+  },{
+    type: "SP",
+    more_less: "more",
+    self_amt: 7,
+    other_amt: 3
+  },{
+    type: "SP",
+    more_less: "more",
+    self_amt: 7,
+    other_amt: 3
+  },{
+    type: "SP",
+    more_less: "more",
+    self_amt: 6,
+    other_amt: 4
+  },{
+    type: "SP",
+    more_less: "more",
+    self_amt: 6,
+    other_amt: 4
+  },{
+    type: "SP",
+    more_less: "more",
+    self_amt: 6,
+    other_amt: 4
+  }
+];
+
+var stim_SP_less = [
+  {
+    type: "SP",
+    more_less: "less",
+    self_amt: 6,
+    other_amt: 4
+  },
+  {
+    type: "SP",
+    more_less: "less",
+    self_amt: 6,
+    other_amt: 4
+  },{
+    type: "SP",
+    more_less: "less",
+    self_amt: 6,
+    other_amt: 4
+  },{
+    type: "SP",
+    more_less: "less",
+    self_amt: 6,
+    other_amt: 4
+  },{
+    type: "SP",
+    more_less: "less",
+    self_amt: 7,
+    other_amt: 3
+  },{
+    type: "SP",
+    more_less: "less",
+    self_amt: 7,
+    other_amt: 3
+  },{
+    type: "SP",
+    more_less: "less",
+    self_amt: 7,
+    other_amt: 3
+  },{
+    type: "SP",
+    more_less: "less",
+    self_amt: 5,
+    other_amt: 5
+  },{
+    type: "SP",
+    more_less: "less",
+    self_amt: 5,
+    other_amt: 5
+  },{
+    type: "SP",
+    more_less: "less",
+    self_amt: 5,
+    other_amt: 5
+  }
+];
+
+var stim_VX_more = [
+  {
+    type: "VX",
+    more_less: "more",
+    self_amt: 7,
+    other_amt: 3
+  },
+  {
+    type: "VX",
+    more_less: "more",
+    self_amt: 7,
+    other_amt: 3
+  },{
+    type: "VX",
+    more_less: "more",
+    self_amt: 7,
+    other_amt: 3
+  },{
+    type: "VX",
+    more_less: "more",
+    self_amt: 7,
+    other_amt: 3
+  },{
+    type: "VX",
+    more_less: "more",
+    self_amt: 8,
+    other_amt: 2
+  },{
+    type: "VX",
+    more_less: "more",
+    self_amt: 8,
+    other_amt: 2
+  },{
+    type: "VX",
+    more_less: "more",
+    self_amt: 9,
+    other_amt: 1
+  },{
+    type: "VX",
+    more_less: "more",
+    self_amt: 6,
+    other_amt: 4
+  },{
+    type: "VX",
+    more_less: "more",
+    self_amt: 6,
+    other_amt: 4
+  },{
+    type: "VX",
+    more_less: "more",
+    self_amt: 5,
+    other_amt: 5
+  },
+];
+
+var stim_VX_less = [
+  {
+    type: "VX",
+    more_less: "less",
+    self_amt: 7,
+    other_amt: 3
+  },{
+    type: "VX",
+    more_less: "less",
+    self_amt: 7,
+    other_amt: 3
+  },{
+    type: "VX",
+    more_less: "less",
+    self_amt: 7,
+    other_amt: 3
+  },{
+    type: "VX",
+    more_less: "less",
+    self_amt: 7,
+    other_amt: 3
+  },{
+    type: "VX",
+    more_less: "less",
+    self_amt: 8,
+    other_amt: 2
+  },{
+    type: "VX",
+    more_less: "less",
+    self_amt: 8,
+    other_amt: 2
+  },{
+    type: "VX",
+    more_less: "less",
+    self_amt: 8,
+    other_amt: 2
+  },{
+    type: "VX",
+    more_less: "less",
+    self_amt: 6,
+    other_amt: 4
+  },{
+    type: "VX",
+    more_less: "less",
+    self_amt: 6,
+    other_amt: 4
+  },{
+    type: "VX",
+    more_less: "less",
+    self_amt: 6,
+    other_amt: 4
+  },
+];
+
+//Randomize within blocks
+var block_length = stim_SP_more.length; //10 in the example blocks
+
+//For timed trials...
+var stim_SP_more_timed = jsPsych.randomization.repeat(stim_SP_more, 1);
+var stim_SP_less_timed = jsPsych.randomization.repeat(stim_SP_less, 1);
+var stim_VX_more_timed = jsPsych.randomization.repeat(stim_VX_more, 1);
+var stim_VX_less_timed = jsPsych.randomization.repeat(stim_VX_less, 1);
+
+//and untimed trials
+var stim_SP_more_untimed = jsPsych.randomization.repeat(stim_SP_more, 1);
+var stim_SP_less_untimed = jsPsych.randomization.repeat(stim_SP_less, 1);
+var stim_VX_more_untimed = jsPsych.randomization.repeat(stim_VX_more, 1);
+var stim_VX_less_untimed = jsPsych.randomization.repeat(stim_VX_less, 1);
+
+
+//Now stack the "more" stimuli on top of each other -- we will call them in order later on
+//Do this for both timed and untimed trials
+//This randomizes whether SP or VX trials come first, but timed trials will always come after untimed, so we don't need to randomize that
+if(which_first) {
+  var stim_more_timed = stim_SP_more_timed.concat(stim_VX_more_timed);
+  var stim_less_timed = stim_SP_less_timed.concat(stim_VX_less_timed);
+  var stim_more_untimed = stim_SP_more_untimed.concat(stim_VX_more_untimed);
+  var stim_less_untimed = stim_SP_less_untimed.concat(stim_VX_less_untimed);
+}else{
+  var stim_more_timed = stim_VX_more_timed.concat(stim_SP_more_timed);
+  var stim_less_timed = stim_VX_less_timed.concat(stim_SP_less_timed);
+  var stim_more_untimed = stim_VX_more_untimed.concat(stim_SP_more_untimed);
+  var stim_less_untimed = stim_VX_less_untimed.concat(stim_SP_less_untimed);
+}
+
+//Randomize whether the "more" side is on the left or right for each block (1 will mean the more side is on the left)
+
+var randLR1 = (Math.random() < 0.5);
+var randLR2 = (Math.random() < 0.5);
+var randLR3 = (Math.random() < 0.5);
+var randLR4 = (Math.random() < 0.5);
+
+
+
+
+
 
 /////////////
 /** Setup */
@@ -258,91 +530,6 @@ var experimentOverview = {
   choices: ['spacebar'],
   post_trial_gap: 500,
 }
-
-///////////////
-/** Ratings */
-//////////////
-const distinctScenarios = [...new Set(scenarios.map(x => x.full))];
-var scenarios_to_rate = jsPsych.randomization.shuffle(distinctScenarios);
-var scenarios_slideshow = jsPsych.randomization.shuffle(distinctScenarios);
-
-var slideshow_counter = 0;
-var ratings_counter = 0;
-
-var slideshow_instr = {
-  type: 'html-keyboard-response',
-  on_start:   () => document.body.style.cursor = 'none',
-  stimulus: `<div> <font size=120%; font color = 'green';>Rating of Actions</font><br/>
-                                       <br><br/>
-             In this part of the experiment, your task is to indicate how you would feel if you had to take certain actions on an acquaintance. <br/> 
-             <br><br/> 
-             First, you will see a slideshow of all actions that you will be rating. You will automatically proceed to the next action. After you see all of the actions, you will move onto the rating task.
-             <br><br/>
-                                          <br><br/>
-            When you are ready, press the  <b>SPACEBAR</b> to start.  </div>`,
-  choices: ['spacebar'],
-  post_trial_gap: 500,
-};
-
-var slideshow = {
-  timeline: [{
-    type: 'html-slideshow-keyboard-response',
-    on_start:   () => document.body.style.cursor = 'none',
-    trial: () => slideshow_counter+1,
-    stimulus: () => scenarios_slideshow[slideshow_counter],
-    trial_duration: 2000,
-    data: { choice_type: 'slideshow'},
-    on_finish: () => {
-      slideshow_counter++;
-    }
-}],
-loop_function: () => slideshow_counter < distinctScenarios.length
-};
-
-var ratings_instr = {
-  type: 'html-keyboard-response',
-  on_start:   () => document.body.style.cursor = 'none',
-  stimulus: `<div> <font size=120%; font color = 'green';>Rating of Actions</font><br/>
-                                       <br><br/>
-             In this part of the experiment, your task is to indicate how you would feel if you had to take certain actions. <br/> 
-             For each action, please rate it on a scale from -100 to 0 based on how bad you would feel taking the action on an acquaintance.
-             <br><br/> 
-             -100 means that you would feel as bad as possible if you were to take this action.<br/> 
-             0 means that you would feel neither good nor bad if you were to take this action. <br/><br/> 
-             If you would feel good to take this action, press the button that says Feel Good. 
-             <br><br/>
-             During the task, you need to use your mouse to move the slider to your desired rating. <br/> 
-                                          <br><br/>
-            When you are ready, press the  <b>SPACEBAR</b> to start.  </div>`,
-  choices: ['spacebar'],
-  post_trial_gap: 500,
-};
-
-var ratings_task = {
-  timeline: [{
-    type: 'html-slider-response-moral-ratings',
-    on_start:   () => document.body.style.cursor = 'pointer',
-    trial: () => ratings_counter+1,
-    stimulus: () => scenarios_to_rate[ratings_counter],
-    labels: ['-100','-80','-70','-60','-50','-40','-30','-20','-10','0'],
-    min: -100,
-    max: 0,
-    step: 1,
-    start: () => getRandomFloat(-100, 0),
-    prompt: `<div>Rate how you would feel if you had to take the following action on an acquaintance?</div>`,
-    button_label_continue: 'Next',
-    button_label_skip: 'Feel Good',
-    require_movement: rating_req,
-    slider_width: 750,
-    response_ends_trial: true,
-    data: { choice_type: 'ratings'},
-    on_finish: () => {
-      ratings_counter++;
-    }
-}],
-loop_function: () => ratings_counter < distinctScenarios.length
-//loop_function: () => ratings_actions_counter < 3
-};
 
 
 /***********************/
@@ -632,8 +819,12 @@ var if_node2 = {
 var prac_choice_count = 0;
 var trial_count_overall = 0;
 
-var trial_count_untimed = 0;
-var trial_count_timed = 0;
+var trial_count_untimed1 = 0;
+var trial_count_untimed2 = 0;
+
+var trial_count_timed1 = 0;
+var trial_count_timed2 = 0;
+
 
 //all 26 scenarios randomized
 var trial_order = jsPsych.randomization.shuffle(Array.from(Array(scenarios.length).keys()))
@@ -867,36 +1058,62 @@ var instructions_RealUntimed = {
 
 var choices_untimed1 = {
   timeline: [
-    if_node1,
-    if_node2,
+    //if_node1,
+    //if_node2,
     {
-      type: "moral-binary-choice",
+      type: "dictator-binary-choice",
       on_start: function(){
         document.body.style.cursor = 'none';
-        console.log(scenarios[trial_order[trial_count_overall]]);
       },
       overall_trial_number: () => trial_count_overall+1,
-      condition_trial_number: () => trial_count_untimed+1,
-      action: () =>   scenarios[trial_order[trial_count_overall]],
-      number_fewer: () => number_fewer_untimed_vector[trial_count_untimed],
-      number_more: () => number_more_untimed_vector[trial_count_untimed],
-      items: () => list_all_pairs[trial_count_overall],
-      action_top: action_top,
-      act_side: () => act_side_untimed_vector[trial_count_untimed],
+      condition_trial_number: () => trial_count_untimed1+1,
+      trial_type: stim_more_untimed[trial_count_untimed1].type,
+      more_side: randLR1,
+      more_self_amount: stim_more_untimed[trial_count_untimed1].self_amt,
+      more_other_amount: stim_more_untimed[trial_count_untimed1].other_amt,
+      less_self_amount: stim_less_untimed[trial_count_untimed1].self_amt,
+      less_other_amount: stim_less_untimed[trial_count_untimed1].other_amt,
       choices: ["F", "J"],
-      realOrCatch: () => catch_trial_untimed[trial_count_untimed],
       timing_response: 0,
       doEyeTracking: true,
       realOrPrac: true,
-      data: { choice_type: 'untimed'},
       on_finish: function() {
-        trial_count_untimed++;
+        trial_count_untimed1++;
         trial_count_overall++;
-        //console.log(items);
       },
     }
   ],
-  loop_function: () => trial_count_untimed < ntrials,
+  loop_function: () => trial_count_untimed1 < block_length,
+};
+
+var choices_untimed2 = {
+  timeline: [
+    //if_node1,
+    //if_node2,
+    {
+      type: "dictator-binary-choice",
+      on_start: function(){
+        document.body.style.cursor = 'none';
+      },
+      overall_trial_number: () => trial_count_overall+1,
+      condition_trial_number: () => trial_count_untimed2+1,
+      trial_type: stim_more_untimed[trial_count_untimed2+block_length].type,
+      more_side: randLR2,
+      more_self_amount: stim_more_untimed[trial_count_untimed2+block_length].self_amt,
+      more_other_amount: stim_more_untimed[trial_count_untimed2+block_length].other_amt,
+      less_self_amount: stim_less_untimed[trial_count_untimed2+block_length].self_amt,
+      less_other_amount: stim_less_untimed[trial_count_untimed2+block_length].other_amt,
+      choices: ["F", "J"],
+      timing_response: 0,
+      doEyeTracking: true,
+      realOrPrac: true,
+      on_finish: function() {
+        trial_count_untimed2++;
+        trial_count_overall++;
+      },
+    }
+  ],
+  loop_function: () => trial_count_untimed2 < block_length,
 };
 
 ///////////////
@@ -918,126 +1135,82 @@ var instructions_RealTimed = {
 
 var choices_timed1 = {
   timeline: [ 
-    if_node1,
-    if_node2,
+    //if_node1,
+    //if_node2,
     {
-      type: "moral-binary-choice",
+      type: "dictator-binary-choice",
       on_start: function(){
         document.body.style.cursor = 'none';
-        console.log(scenarios[trial_order[trial_count_overall]]);
       },
       overall_trial_number: () => trial_count_overall+1,
-      condition_trial_number: () => trial_count_timed+1,
-      action: () =>   scenarios[trial_order[trial_count_overall]],
-      number_fewer: () => number_fewer_timed_vector[trial_count_timed],
-      number_more: () => number_more_timed_vector[trial_count_timed],
-      items: () => list_all_pairs[trial_count_overall],
-      action_top: action_top,
-      act_side: () => act_side_timed_vector[trial_count_timed],
+      condition_trial_number: () => trial_count_timed1+1,
+      trial_type: stim_more_timed[trial_count_timed1].type,
+      more_side: randLR3,
+      more_self_amount: stim_more_timed[trial_count_timed1].self_amt,
+      more_other_amount: stim_more_timed[trial_count_timed1].other_amt,
+      less_self_amount: stim_less_timed[trial_count_timed1].self_amt,
+      less_other_amount: stim_less_timed[trial_count_timed1].other_amt,
       choices: ["F", "J"],
-      realOrCatch:  () => catch_trial_timed[trial_count_timed],
       timing_response: 0,
       doEyeTracking: true,
       realOrPrac: true,
-      data: { choice_type: 'timed'},
+      timed_trial: true,
+      max_time: 2000,
       on_finish: function() {
-        trial_count_timed++;
+        trial_count_timed1++;
         trial_count_overall++;
-        //console.log(items);
       },
     }
   ],
-  loop_function: () => trial_count_timed < ntrials,
+  loop_function: () => trial_count_timed1 < block_length,
 };
 
-////////////////////
-/** Item Ratings */
-///////////////////
 
-var ratings_items_instr = {
-  type: 'html-keyboard-response',
-  on_start:   () => document.body.style.cursor = 'none',
-  stimulus: `<div> <font size=120%; font color = 'green';>Rating of Actions</font><br/>
-                                       <br><br/>
-             In this part of the experiment, your task is to indicate how you would feel if a certain person or animal would die. <br/> 
-             For each action, please rate it on a scale from -100 to 0 based on how bad you would feel if they died.
-             <br><br/> 
-             -100 means that you would feel as bad as possible if they died.<br/> 
-             0 means that you would feel neither good nor bad if they died. <br/><br/> 
-             If you would feel good if they died, press the button that says Feel Good. 
-             <br><br/>
-             During the task, you need to use your mouse to move the slider to your desired rating. <br/> 
-                                          <br><br/>
-            When you are ready, press the  <b>SPACEBAR</b> to start.  </div>`,
-  choices: ['spacebar'],
-  post_trial_gap: 500,
-};
-
-var ratings_items_counter = 0;
-var ratings_items_order = jsPsych.randomization.shuffle(Array.from(Array(items.length).keys()));
-
-console.log(items[ratings_items_order[ratings_items_counter]].name);
-
-var ratings_items = {
-  timeline: [{
-    type: 'html-slider-response-moral-ratings',
-    on_start:   () => document.body.style.cursor = 'pointer',
-    trial: () => ratings_items_counter+1,
-    stimulus: () => items[ratings_items_order[ratings_items_counter]].name,
-    labels: ['-100','-80','-70','-60','-50','-40','-30','-20','-10','0'],
-    min: -100,
-    max: 0,
-    step: 1,
-    start: () => getRandomFloat(-100, 0),
-    prompt: `<div>Rate how you would feel if the following person or animal died?</div>`,
-    button_label_continue: 'Next',
-    button_label_skip: 'Feel Good',
-    require_movement: rating_req,
-    slider_width: 750,
-    response_ends_trial: true,
-    data: { choice_type: 'ratings_items'},
-    on_finish: () => {
-      ratings_items_counter++;
+var choices_timed2 = {
+  timeline: [ 
+    //if_node1,
+    //if_node2,
+    {
+      type: "dictator-binary-choice",
+      on_start: function(){
+        document.body.style.cursor = 'none';
+      },
+      overall_trial_number: () => trial_count_overall+1,
+      condition_trial_number: () => trial_count_timed2+1,
+      trial_type: stim_more_timed[trial_count_timed2+block_length].type,
+      more_side: randLR4,
+      more_self_amount: stim_more_timed[trial_count_timed2+block_length].self_amt,
+      more_other_amount: stim_more_timed[trial_count_timed2+block_length].other_amt,
+      less_self_amount: stim_less_timed[trial_count_timed2+block_length].self_amt,
+      less_other_amount: stim_less_timed[trial_count_timed2+block_length].other_amt,
+      choices: ["F", "J"],
+      timing_response: 0,
+      doEyeTracking: true,
+      realOrPrac: true,
+      timed_trial: true,
+      max_time: 2000,
+      on_finish: function() {
+        trial_count_timed2++;
+        trial_count_overall++;
+      },
     }
-}],
-loop_function: () => ratings_items_counter < items.length
-//loop_function: () => ratings_actions_counter < 3
+  ],
+  loop_function: () => trial_count_timed2 < block_length,
 };
-
 
 
 //////////////////////
 /** Order of Phases */
 /////////////////////
 
-var trials_Untimed_First = {
+var block_order = {
   timeline: [
-    instructions_RealUntimed,choices_untimed1, 
-    breaktime, recalibrationInstruction2,
-    instructions_RealTimed, choices_timed1],
-
-  conditional_function: function(){
-      if(timed_first == 0){
-          return true;
-      } else {
-          return false;
-      }
-  }
-}
-var trials_Timed_First = {
-  timeline: [
-    instructions_RealTimed, choices_timed1,  
-    breaktime, recalibrationInstruction2,
-    instructions_RealUntimed, choices_untimed1],
-
-  conditional_function: function(){
-      if(timed_first == 1){
-          return true;
-      } else {
-          return false;
-      }
-  }
-}
+    choices_untimed1,
+    choices_timed1,
+    choices_untimed2,
+    choices_timed2
+  ]
+};
 
 /***********************/
 /******** Survey *******/
@@ -1128,19 +1301,17 @@ function startExperiment() {
   jsPsych.init({
     timeline: [
       fullscreenEnter,
-      eyeTrackingInstruction1,eyeTrackingInstruction2, inital_eye_calibration,
+      //eyeTrackingInstruction1,eyeTrackingInstruction2, inital_eye_calibration,
       experimentOverview,
       //slideshow_instr, slideshow,
       //ratings_instr, ratings_task,
-      choiceOverview,instructions_examples,
-      recalibration,
-      choiceInstructionReinforce,
-      prac_choice,
-      instructionsReal,trials_Untimed_First,trials_Timed_First,
-     ratings_items_instr, ratings_items,
-     demographic_survey,
-    debriefing_page,
-    success_guard
+      //recalibration,
+      //prac_choice,
+      //instructionsReal
+      block_order,
+      demographic_survey,
+      debriefing_page,
+      success_guard
     ],
     on_trial_finish: function () {
       trialcounter = jsPsych.data.get().count();
