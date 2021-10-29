@@ -23,17 +23,23 @@ jsPsych.plugins["dictator-binary-choice"] = (function () {
           default: undefined,
           description: 'the trial number in the block'
         },
-        trial_type: {
-            type: jsPsych.plugins.parameterType.INT,
-            pretty_name: 'trial type',
+        block: {
+            type: jsPsych.plugins.parameterType.HTML_STRING,
+            pretty_name: 'trial quarter',
             default: undefined,
-            description: 'is this an SP or VS trial'
+            description: 'which block'
         },
         more_side: {
             type: jsPsych.plugins.parameterType.BOOL,
             pretty_name: 'more left',
             default: true,
             description: 'is the side with more (SP/VX) on the left or right'
+        },
+        self_side: {
+            type: jsPsych.plugins.parameterType.BOOL,
+            pretty_name: 'self up',
+            default: true,
+            description: 'is the reward to the subject on the top or bottom'
         },
         more_self_amount: {
             type: jsPsych.plugins.parameterType.HTML_STRING,
@@ -133,8 +139,8 @@ jsPsych.plugins["dictator-binary-choice"] = (function () {
   
   
   
-  //set up text in each quadrant - here, the self amount is always on top
-  if (trial.more_side){
+  //set up text in each quadrant - need to set left/right and top/bottom
+  if (trial.more_side && trial.self_side){ //if self on top
   
   //if more (SP/VX) side is on the left:
   
@@ -143,7 +149,7 @@ jsPsych.plugins["dictator-binary-choice"] = (function () {
     var LL = trial.more_other_amount.toString();
     var LR = trial.less_other_amount.toString();
   
-  } else {
+  } else if(!trial.more_side && trial.self_side){
  
   //or on the right:
 
@@ -152,6 +158,22 @@ jsPsych.plugins["dictator-binary-choice"] = (function () {
   var LL = trial.less_other_amount.toString();
   var LR = trial.more_other_amount.toString();
     
+  } else if(trial.more_side && !trial.self_side) { //if self on bottom
+
+    //if more (SP/VX) side is on the left:
+    var UL = trial.more_other_amount.toString();
+    var UR = trial.less_other_amount.toString();
+    var LL = trial.more_self_amount.toString();
+    var LR = trial.less_self_amount.toString();
+
+  } else if(!trial.more_side && !trial.self_side) {
+
+    //or on the right:
+    var UL = trial.less_other_amount.toString();
+    var UR = trial.more_other_amount.toString();
+    var LL = trial.less_self_amount.toString();
+    var LR = trial.more_self_amount.toString();
+
   };
   
   //get new variables ready for output
@@ -165,11 +187,11 @@ jsPsych.plugins["dictator-binary-choice"] = (function () {
   
   //show the text
   new_html += '<div id = "timeoutText">Please make your selection more quickly!</div>'
-  new_html += '<div class="grid-container">';
-  new_html += `<div id="UL">${UL}</div>`;
-  new_html += `<div id="UR">${UR}</div>`;
-  new_html += `<div id="LL">${LL}</div>`;
-  new_html += `<div id="LR">${LR}</div>`;
+  new_html += '<div class="grid-container"; height: 400px;>'; //grid-template-rows: auto auto; grid-template-columns: auto auto;>';
+  new_html += `<div class = "grid-item" id="UL">${UL}</div>`;
+  new_html += `<div class = "grid-item" id="UR">${UR}</div>`;
+  new_html += `<div class = "grid-item" id="LL">${LL}</div>`;
+  new_html += `<div class = "grid-item" id="LR">${LR}</div>`;
   new_html += '</div>'
   
   
@@ -181,13 +203,9 @@ jsPsych.plugins["dictator-binary-choice"] = (function () {
   
       if (trial.timed_trial) {
         jsPsych.pluginAPI.setTimeout(function() {
-          display_element.querySelector('#timeoutText');
+          display_element.querySelector('#timeoutText').style.visibility = "visible";
         }, trial.max_time);
-      } else{
-        jsPsych.pluginAPI.setTimeout(function() {
-          display_element.querySelector('#timeoutText');
-        }, 100000);
-      }
+      };
 
 
 
@@ -269,9 +287,10 @@ jsPsych.plugins["dictator-binary-choice"] = (function () {
           "rt": response.rt,
           "key_press": response.key,
           "choices": trial.choices,
-          "trial_type": trial.trial_type,
+          "trial_block": trial.block,
 
           "more_side": trial.more_side,
+          "self_side": trial.self_side,
           "more_self": trial.more_self_amount,
           "more_other": trial.more_other_amount,
           "less_self": trial.less_self_amount,

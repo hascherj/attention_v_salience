@@ -35,266 +35,297 @@ const DATE = MM + DD + YYYY;
 /////////////////////
 
 
-which_first = (Math.random() < 0.5);
+var which_first = (Math.random() < 0.5);
 
 
-/*Example Stimuli - for testing code*/
-var stim_SP_more = [
-  {
-    type: "SP",
-    more_less: "more",
-    self_amt: 8,
-    other_amt: 2
-  },
-  {
-    type: "SP",
-    more_less: "more",
-    self_amt: 8,
-    other_amt: 2
-  },{
-    type: "SP",
-    more_less: "more",
-    self_amt: 8,
-    other_amt: 2
-  },{
-    type: "SP",
-    more_less: "more",
-    self_amt: 7,
-    other_amt: 3
-  },{
-    type: "SP",
-    more_less: "more",
-    self_amt: 7,
-    other_amt: 3
-  },{
-    type: "SP",
-    more_less: "more",
-    self_amt: 7,
-    other_amt: 3
-  },{
-    type: "SP",
-    more_less: "more",
-    self_amt: 7,
-    other_amt: 3
-  },{
-    type: "SP",
-    more_less: "more",
-    self_amt: 6,
-    other_amt: 4
-  },{
-    type: "SP",
-    more_less: "more",
-    self_amt: 6,
-    other_amt: 4
-  },{
-    type: "SP",
-    more_less: "more",
-    self_amt: 6,
-    other_amt: 4
-  }
-];
-
-var stim_SP_less = [
-  {
-    type: "SP",
-    more_less: "less",
-    self_amt: 6,
-    other_amt: 4
-  },
-  {
-    type: "SP",
-    more_less: "less",
-    self_amt: 6,
-    other_amt: 4
-  },{
-    type: "SP",
-    more_less: "less",
-    self_amt: 6,
-    other_amt: 4
-  },{
-    type: "SP",
-    more_less: "less",
-    self_amt: 6,
-    other_amt: 4
-  },{
-    type: "SP",
-    more_less: "less",
-    self_amt: 7,
-    other_amt: 3
-  },{
-    type: "SP",
-    more_less: "less",
-    self_amt: 7,
-    other_amt: 3
-  },{
-    type: "SP",
-    more_less: "less",
-    self_amt: 7,
-    other_amt: 3
-  },{
-    type: "SP",
-    more_less: "less",
-    self_amt: 5,
-    other_amt: 5
-  },{
-    type: "SP",
-    more_less: "less",
-    self_amt: 5,
-    other_amt: 5
-  },{
-    type: "SP",
-    more_less: "less",
-    self_amt: 5,
-    other_amt: 5
-  }
-];
-
-var stim_VX_more = [
-  {
-    type: "VX",
-    more_less: "more",
-    self_amt: 7,
-    other_amt: 3
-  },
-  {
-    type: "VX",
-    more_less: "more",
-    self_amt: 7,
-    other_amt: 3
-  },{
-    type: "VX",
-    more_less: "more",
-    self_amt: 7,
-    other_amt: 3
-  },{
-    type: "VX",
-    more_less: "more",
-    self_amt: 7,
-    other_amt: 3
-  },{
-    type: "VX",
-    more_less: "more",
-    self_amt: 8,
-    other_amt: 2
-  },{
-    type: "VX",
-    more_less: "more",
-    self_amt: 8,
-    other_amt: 2
-  },{
-    type: "VX",
-    more_less: "more",
-    self_amt: 9,
-    other_amt: 1
-  },{
-    type: "VX",
-    more_less: "more",
-    self_amt: 6,
-    other_amt: 4
-  },{
-    type: "VX",
-    more_less: "more",
-    self_amt: 6,
-    other_amt: 4
-  },{
-    type: "VX",
-    more_less: "more",
-    self_amt: 5,
-    other_amt: 5
-  },
-];
-
-var stim_VX_less = [
-  {
-    type: "VX",
-    more_less: "less",
-    self_amt: 7,
-    other_amt: 3
-  },{
-    type: "VX",
-    more_less: "less",
-    self_amt: 7,
-    other_amt: 3
-  },{
-    type: "VX",
-    more_less: "less",
-    self_amt: 7,
-    other_amt: 3
-  },{
-    type: "VX",
-    more_less: "less",
-    self_amt: 7,
-    other_amt: 3
-  },{
-    type: "VX",
-    more_less: "less",
-    self_amt: 8,
-    other_amt: 2
-  },{
-    type: "VX",
-    more_less: "less",
-    self_amt: 8,
-    other_amt: 2
-  },{
-    type: "VX",
-    more_less: "less",
-    self_amt: 8,
-    other_amt: 2
-  },{
-    type: "VX",
-    more_less: "less",
-    self_amt: 6,
-    other_amt: 4
-  },{
-    type: "VX",
-    more_less: "less",
-    self_amt: 6,
-    other_amt: 4
-  },{
-    type: "VX",
-    more_less: "less",
-    self_amt: 6,
-    other_amt: 4
-  },
-];
-
-//Randomize within blocks
-var block_length = stim_SP_more.length; //10 in the example blocks
-
-//For timed trials...
-var stim_SP_more_timed = jsPsych.randomization.repeat(stim_SP_more, 1);
-var stim_SP_less_timed = jsPsych.randomization.repeat(stim_SP_less, 1);
-var stim_VX_more_timed = jsPsych.randomization.repeat(stim_VX_more, 1);
-var stim_VX_less_timed = jsPsych.randomization.repeat(stim_VX_less, 1);
-
-//and untimed trials
-var stim_SP_more_untimed = jsPsych.randomization.repeat(stim_SP_more, 1);
-var stim_SP_less_untimed = jsPsych.randomization.repeat(stim_SP_less, 1);
-var stim_VX_more_untimed = jsPsych.randomization.repeat(stim_VX_more, 1);
-var stim_VX_less_untimed = jsPsych.randomization.repeat(stim_VX_less, 1);
+/*Using Nitisha's Stimuli*/
+var stim_Q1 = games.slice(0,44);
+var stim_Q2 = games.slice(45,89);
+var stim_Q3 = games.slice(90,134);
+var stim_Q4 = games.slice(135,179);
 
 
-//Now stack the "more" stimuli on top of each other -- we will call them in order later on
-//Do this for both timed and untimed trials
-//This randomizes whether SP or VX trials come first, but timed trials will always come after untimed, so we don't need to randomize that
-if(which_first) {
-  var stim_more_timed = stim_SP_more_timed.concat(stim_VX_more_timed);
-  var stim_less_timed = stim_SP_less_timed.concat(stim_VX_less_timed);
-  var stim_more_untimed = stim_SP_more_untimed.concat(stim_VX_more_untimed);
-  var stim_less_untimed = stim_SP_less_untimed.concat(stim_VX_less_untimed);
-}else{
-  var stim_more_timed = stim_VX_more_timed.concat(stim_SP_more_timed);
-  var stim_less_timed = stim_VX_less_timed.concat(stim_SP_less_timed);
-  var stim_more_untimed = stim_VX_more_untimed.concat(stim_SP_more_untimed);
-  var stim_less_untimed = stim_VX_less_untimed.concat(stim_SP_less_untimed);
+// /*Example Stimuli - for testing code*/
+// var stim_SP_more = [
+//   {
+//     type: "SP",
+//     more_less: "more",
+//     self_amt: 8,
+//     other_amt: 2
+//   },
+//   {
+//     type: "SP",
+//     more_less: "more",
+//     self_amt: 8,
+//     other_amt: 2
+//   },{
+//     type: "SP",
+//     more_less: "more",
+//     self_amt: 8,
+//     other_amt: 2
+//   },{
+//     type: "SP",
+//     more_less: "more",
+//     self_amt: 7,
+//     other_amt: 3
+//   },{
+//     type: "SP",
+//     more_less: "more",
+//     self_amt: 7,
+//     other_amt: 3
+//   },{
+//     type: "SP",
+//     more_less: "more",
+//     self_amt: 7,
+//     other_amt: 3
+//   },{
+//     type: "SP",
+//     more_less: "more",
+//     self_amt: 7,
+//     other_amt: 3
+//   },{
+//     type: "SP",
+//     more_less: "more",
+//     self_amt: 6,
+//     other_amt: 4
+//   },{
+//     type: "SP",
+//     more_less: "more",
+//     self_amt: 6,
+//     other_amt: 4
+//   },{
+//     type: "SP",
+//     more_less: "more",
+//     self_amt: 6,
+//     other_amt: 4
+//   }
+// ];
+
+// var stim_SP_less = [
+//   {
+//     type: "SP",
+//     more_less: "less",
+//     self_amt: 6,
+//     other_amt: 4
+//   },
+//   {
+//     type: "SP",
+//     more_less: "less",
+//     self_amt: 6,
+//     other_amt: 4
+//   },{
+//     type: "SP",
+//     more_less: "less",
+//     self_amt: 6,
+//     other_amt: 4
+//   },{
+//     type: "SP",
+//     more_less: "less",
+//     self_amt: 6,
+//     other_amt: 4
+//   },{
+//     type: "SP",
+//     more_less: "less",
+//     self_amt: 7,
+//     other_amt: 3
+//   },{
+//     type: "SP",
+//     more_less: "less",
+//     self_amt: 7,
+//     other_amt: 3
+//   },{
+//     type: "SP",
+//     more_less: "less",
+//     self_amt: 7,
+//     other_amt: 3
+//   },{
+//     type: "SP",
+//     more_less: "less",
+//     self_amt: 5,
+//     other_amt: 5
+//   },{
+//     type: "SP",
+//     more_less: "less",
+//     self_amt: 5,
+//     other_amt: 5
+//   },{
+//     type: "SP",
+//     more_less: "less",
+//     self_amt: 5,
+//     other_amt: 5
+//   }
+// ];
+
+// var stim_VX_more = [
+//   {
+//     type: "VX",
+//     more_less: "more",
+//     self_amt: 7,
+//     other_amt: 3
+//   },
+//   {
+//     type: "VX",
+//     more_less: "more",
+//     self_amt: 7,
+//     other_amt: 3
+//   },{
+//     type: "VX",
+//     more_less: "more",
+//     self_amt: 7,
+//     other_amt: 3
+//   },{
+//     type: "VX",
+//     more_less: "more",
+//     self_amt: 7,
+//     other_amt: 3
+//   },{
+//     type: "VX",
+//     more_less: "more",
+//     self_amt: 8,
+//     other_amt: 2
+//   },{
+//     type: "VX",
+//     more_less: "more",
+//     self_amt: 8,
+//     other_amt: 2
+//   },{
+//     type: "VX",
+//     more_less: "more",
+//     self_amt: 9,
+//     other_amt: 1
+//   },{
+//     type: "VX",
+//     more_less: "more",
+//     self_amt: 6,
+//     other_amt: 4
+//   },{
+//     type: "VX",
+//     more_less: "more",
+//     self_amt: 6,
+//     other_amt: 4
+//   },{
+//     type: "VX",
+//     more_less: "more",
+//     self_amt: 5,
+//     other_amt: 5
+//   },
+// ];
+
+// var stim_VX_less = [
+//   {
+//     type: "VX",
+//     more_less: "less",
+//     self_amt: 7,
+//     other_amt: 3
+//   },{
+//     type: "VX",
+//     more_less: "less",
+//     self_amt: 7,
+//     other_amt: 3
+//   },{
+//     type: "VX",
+//     more_less: "less",
+//     self_amt: 7,
+//     other_amt: 3
+//   },{
+//     type: "VX",
+//     more_less: "less",
+//     self_amt: 7,
+//     other_amt: 3
+//   },{
+//     type: "VX",
+//     more_less: "less",
+//     self_amt: 8,
+//     other_amt: 2
+//   },{
+//     type: "VX",
+//     more_less: "less",
+//     self_amt: 8,
+//     other_amt: 2
+//   },{
+//     type: "VX",
+//     more_less: "less",
+//     self_amt: 8,
+//     other_amt: 2
+//   },{
+//     type: "VX",
+//     more_less: "less",
+//     self_amt: 6,
+//     other_amt: 4
+//   },{
+//     type: "VX",
+//     more_less: "less",
+//     self_amt: 6,
+//     other_amt: 4
+//   },{
+//     type: "VX",
+//     more_less: "less",
+//     self_amt: 6,
+//     other_amt: 4
+//   },
+// ];
+
+// //Randomize within blocks
+// // var block_length = stim_SP_more.length; //10 in the example blocks
+
+// //For timed trials...
+// var stim_SP_more_timed = jsPsych.randomization.repeat(stim_SP_more, 1);
+// var stim_SP_less_timed = jsPsych.randomization.repeat(stim_SP_less, 1);
+// var stim_VX_more_timed = jsPsych.randomization.repeat(stim_VX_more, 1);
+// var stim_VX_less_timed = jsPsych.randomization.repeat(stim_VX_less, 1);
+
+// //and untimed trials
+// var stim_SP_more_untimed = jsPsych.randomization.repeat(stim_SP_more, 1);
+// var stim_SP_less_untimed = jsPsych.randomization.repeat(stim_SP_less, 1);
+// var stim_VX_more_untimed = jsPsych.randomization.repeat(stim_VX_more, 1);
+// var stim_VX_less_untimed = jsPsych.randomization.repeat(stim_VX_less, 1);
+
+
+// //Now stack the "more" stimuli on top of each other -- we will call them in order later on
+// //Do this for both timed and untimed trials
+// //This randomizes whether SP or VX trials come first, but timed trials will always come after untimed, so we don't need to randomize that
+// if(which_first) {
+//   var stim_more_timed = stim_SP_more_timed.concat(stim_VX_more_timed);
+//   var stim_less_timed = stim_SP_less_timed.concat(stim_VX_less_timed);
+//   var stim_more_untimed = stim_SP_more_untimed.concat(stim_VX_more_untimed);
+//   var stim_less_untimed = stim_SP_less_untimed.concat(stim_VX_less_untimed);
+// }else{
+//   var stim_more_timed = stim_VX_more_timed.concat(stim_SP_more_timed);
+//   var stim_less_timed = stim_VX_less_timed.concat(stim_SP_less_timed);
+//   var stim_more_untimed = stim_VX_more_untimed.concat(stim_SP_more_untimed);
+//   var stim_less_untimed = stim_VX_less_untimed.concat(stim_SP_less_untimed);
+// }
+
+// //Randomize whether the "more" side is on the left or right for each block (1 will mean the more side is on the left)
+
+// var randLR1 = (Math.random() < 0.5);
+// var randLR2 = (Math.random() < 0.5);
+// var randLR3 = (Math.random() < 0.5);
+// var randLR4 = (Math.random() < 0.5);
+
+
+
+
+
+///////////////////////////////////////
+// Updated Block Setup/Randomization //
+///////////////////////////////////////
+
+var rand1 = (Math.random() < 0.5);    //which half of the exp comes first
+var rand2 = (Math.random() < 0.5);    //randomize left/right side for the first two blocks
+var rand3 = (Math.random() < 0.5);    //randomize top/bottom
+var rand4 = (Math.random() < 0.5);    //randomize left/right for the other two blocks
+var Q1_order = jsPsych.randomization.shuffle(Array.from(Array(stim_Q1.length).keys()))
+var Q2_order = jsPsych.randomization.shuffle(Array.from(Array(stim_Q2.length).keys())).map(v => v + 45)
+var Q3_order = jsPsych.randomization.shuffle(Array.from(Array(stim_Q3.length).keys())).map(v => v + 90)
+var Q4_order = jsPsych.randomization.shuffle(Array.from(Array(stim_Q4.length).keys())).map(v => v + 135)
+if(rand1) {
+  var total_trial_order = Q1_order.concat(Q2_order).concat(Q3_order).concat(Q4_order);
+} else{
+  var total_trial_order = Q3_order.concat(Q4_order).concat(Q1_order).concat(Q2_order);
 }
+var block_length = stim_Q1.length;
 
-//Randomize whether the "more" side is on the left or right for each block (1 will mean the more side is on the left)
-
-var randLR1 = (Math.random() < 0.5);
-var randLR2 = (Math.random() < 0.5);
-var randLR3 = (Math.random() < 0.5);
-var randLR4 = (Math.random() < 0.5);
 
 
 
@@ -1040,21 +1071,181 @@ var instructionsReal = {
   post_trial_gap: 500,
 }
 
-///////////////
-/** Untimed */
-//////////////
 
-var instructions_RealUntimed = {
-  data:{
-    screen_id: "instructions_real_untimed"
-  },
-  type: "instructions",
-  pages: ["In this part of the study, you should carefully consider your choices.  "+  
-  "Please press the spacebar to continue."
-  ],
-  allow_backward: false, 
-  key_forward: 'spacebar'
-}
+// ///////////////
+// /** Untimed */
+// //////////////
+
+// var instructions_RealUntimed = {
+//   data:{
+//     screen_id: "instructions_real_untimed"
+//   },
+//   type: "instructions",
+//   pages: ["In this part of the study, you should carefully consider your choices.  "+  
+//   "Please press the spacebar to continue."
+//   ],
+//   allow_backward: false, 
+//   key_forward: 'spacebar'
+// }
+
+// var choices_untimed1 = {
+//   timeline: [
+//     //if_node1,
+//     //if_node2,
+//     {
+//       type: "dictator-binary-choice",
+//       on_start: function(){
+//         document.body.style.cursor = 'none';
+//       },
+//       overall_trial_number: () => trial_count_overall+1,
+//       condition_trial_number: () => trial_count_untimed1+1,
+//       trial_type: () => stim_more_untimed[trial_count_untimed1].type,
+//       more_side: () => randLR1,
+//       more_self_amount: () => stim_more_untimed[trial_count_untimed1].self_amt,
+//       more_other_amount: () => stim_more_untimed[trial_count_untimed1].other_amt,
+//       less_self_amount: () => stim_less_untimed[trial_count_untimed1].self_amt,
+//       less_other_amount: () => stim_less_untimed[trial_count_untimed1].other_amt,
+//       choices: ["F", "J"],
+//       timing_response: 0,
+//       doEyeTracking: true,
+//       realOrPrac: true,
+//       on_finish: function() {
+//         trial_count_untimed1++;
+//         trial_count_overall++;
+//       },
+//     }
+//   ],
+//   loop_function: () => trial_count_untimed1 < block_length,
+// };
+
+// var choices_untimed2 = {
+//   timeline: [
+//     //if_node1,
+//     //if_node2,
+//     {
+//       type: "dictator-binary-choice",
+//       on_start: function(){
+//         document.body.style.cursor = 'none';
+//       },
+//       overall_trial_number: () => trial_count_overall+1,
+//       condition_trial_number: () => trial_count_untimed2+1,
+//       trial_type: () => stim_more_untimed[trial_count_untimed2+block_length].type,
+//       more_side: () => randLR2,
+//       more_self_amount: () => stim_more_untimed[trial_count_untimed2+block_length].self_amt,
+//       more_other_amount: () => stim_more_untimed[trial_count_untimed2+block_length].other_amt,
+//       less_self_amount: () => stim_less_untimed[trial_count_untimed2+block_length].self_amt,
+//       less_other_amount: () => stim_less_untimed[trial_count_untimed2+block_length].other_amt,
+//       choices: ["F", "J"],
+//       timing_response: 0,
+//       doEyeTracking: true,
+//       realOrPrac: true,
+//       on_finish: function() {
+//         trial_count_untimed2++;
+//         trial_count_overall++;
+//       },
+//     }
+//   ],
+//   loop_function: () => trial_count_untimed2 < block_length,
+// };
+
+// ///////////////
+// /** Timed */
+// //////////////
+
+// var instructions_RealTimed = {
+//   data:{
+//     screen_id: "instructions_real_timed"
+//   },
+//   type: "instructions",
+//   pages: ["In this part of the study, you should make your choices as  <font color = 'Tomato'>very quickly</font> as you can.  "+
+//   "You should try to make ALL of the decisions in just 1 minute.  This means that you have about 4 seconds per decision. <br/><br/>" + 
+//   "Please press the <b>SPACEBAR</b> to continue."
+//   ],
+//   allow_backward: false, 
+//   key_forward: 'spacebar'
+// }
+
+// var choices_timed1 = {
+//   timeline: [ 
+//     //if_node1,
+//     //if_node2,
+//     {
+//       type: "dictator-binary-choice",
+//       on_start: function(){
+//         document.body.style.cursor = 'none';
+//       },
+//       overall_trial_number: () => trial_count_overall+1,
+//       condition_trial_number: () => trial_count_timed1+1,
+//       trial_type: () => stim_more_timed[trial_count_timed1].type,
+//       more_side: () => randLR3,
+//       more_self_amount: () => stim_more_timed[trial_count_timed1].self_amt,
+//       more_other_amount: () => stim_more_timed[trial_count_timed1].other_amt,
+//       less_self_amount: () => stim_less_timed[trial_count_timed1].self_amt,
+//       less_other_amount: () => stim_less_timed[trial_count_timed1].other_amt,
+//       choices: ["F", "J"],
+//       timing_response: 0,
+//       doEyeTracking: true,
+//       realOrPrac: true,
+//       timed_trial: true,
+//       max_time: 2000,
+//       on_finish: function() {
+//         trial_count_timed1++;
+//         trial_count_overall++;
+//       },
+//     }
+//   ],
+//   loop_function: () => trial_count_timed1 < block_length,
+// };
+
+
+// var choices_timed2 = {
+//   timeline: [ 
+//     //if_node1,
+//     //if_node2,
+//     {
+//       type: "dictator-binary-choice",
+//       on_start: function(){
+//         document.body.style.cursor = 'none';
+//       },
+//       overall_trial_number: () => trial_count_overall+1,
+//       condition_trial_number: () => trial_count_timed2+1,
+//       trial_type: () => stim_more_timed[trial_count_timed2+block_length].type,
+//       more_side: () => randLR4,
+//       more_self_amount: () => stim_more_timed[trial_count_timed2+block_length].self_amt,
+//       more_other_amount: () => stim_more_timed[trial_count_timed2+block_length].other_amt,
+//       less_self_amount: () => stim_less_timed[trial_count_timed2+block_length].self_amt,
+//       less_other_amount: () => stim_less_timed[trial_count_timed2+block_length].other_amt,
+//       choices: ["F", "J"],
+//       timing_response: 0,
+//       doEyeTracking: true,
+//       realOrPrac: true,
+//       timed_trial: true,
+//       max_time: 2000,
+//       on_finish: function() {
+//         trial_count_timed2++;
+//         trial_count_overall++;
+//       },
+//     }
+//   ],
+//   loop_function: () => trial_count_timed2 < block_length,
+// };
+
+
+// //////////////////////
+// /** Order of Phases */
+// /////////////////////
+
+// var block_order = {
+//   timeline: [
+//     choices_untimed1,
+//     choices_timed1,
+//     choices_untimed2,
+//     choices_timed2
+//   ]
+// };
+
+
+
 
 var choices_untimed1 = {
   timeline: [
@@ -1067,12 +1258,13 @@ var choices_untimed1 = {
       },
       overall_trial_number: () => trial_count_overall+1,
       condition_trial_number: () => trial_count_untimed1+1,
-      trial_type: stim_more_untimed[trial_count_untimed1].type,
-      more_side: randLR1,
-      more_self_amount: stim_more_untimed[trial_count_untimed1].self_amt,
-      more_other_amount: stim_more_untimed[trial_count_untimed1].other_amt,
-      less_self_amount: stim_less_untimed[trial_count_untimed1].self_amt,
-      less_other_amount: stim_less_untimed[trial_count_untimed1].other_amt,
+      block: () => games[total_trial_order[trial_count_overall]].block,
+      more_side: () => rand2,
+      self_side: () => rand3,
+      more_self_amount: () => games[total_trial_order[trial_count_overall]].selfish_self,
+      more_other_amount: () => games[total_trial_order[trial_count_overall]].selfish_other,
+      less_self_amount: () => games[total_trial_order[trial_count_overall]].prosocial_self,
+      less_other_amount: () => games[total_trial_order[trial_count_overall]].prosocial_other,
       choices: ["F", "J"],
       timing_response: 0,
       doEyeTracking: true,
@@ -1086,6 +1278,8 @@ var choices_untimed1 = {
   loop_function: () => trial_count_untimed1 < block_length,
 };
 
+
+
 var choices_untimed2 = {
   timeline: [
     //if_node1,
@@ -1097,12 +1291,13 @@ var choices_untimed2 = {
       },
       overall_trial_number: () => trial_count_overall+1,
       condition_trial_number: () => trial_count_untimed2+1,
-      trial_type: stim_more_untimed[trial_count_untimed2+block_length].type,
-      more_side: randLR2,
-      more_self_amount: stim_more_untimed[trial_count_untimed2+block_length].self_amt,
-      more_other_amount: stim_more_untimed[trial_count_untimed2+block_length].other_amt,
-      less_self_amount: stim_less_untimed[trial_count_untimed2+block_length].self_amt,
-      less_other_amount: stim_less_untimed[trial_count_untimed2+block_length].other_amt,
+      block: () => games[total_trial_order[trial_count_overall]].block,
+      more_side: () => rand2,
+      self_side: () => rand3,
+      more_self_amount: () => games[total_trial_order[trial_count_overall]].selfish_self,
+      more_other_amount: () => games[total_trial_order[trial_count_overall]].selfish_other,
+      less_self_amount: () => games[total_trial_order[trial_count_overall]].prosocial_self,
+      less_other_amount: () => games[total_trial_order[trial_count_overall]].prosocial_other,
       choices: ["F", "J"],
       timing_response: 0,
       doEyeTracking: true,
@@ -1116,22 +1311,6 @@ var choices_untimed2 = {
   loop_function: () => trial_count_untimed2 < block_length,
 };
 
-///////////////
-/** Timed */
-//////////////
-
-var instructions_RealTimed = {
-  data:{
-    screen_id: "instructions_real_timed"
-  },
-  type: "instructions",
-  pages: ["In this part of the study, you should make your choices as  <font color = 'Tomato'>very quickly</font> as you can.  "+
-  "You should try to make ALL of the decisions in just 1 minute.  This means that you have about 4 seconds per decision. <br/><br/>" + 
-  "Please press the <b>SPACEBAR</b> to continue."
-  ],
-  allow_backward: false, 
-  key_forward: 'spacebar'
-}
 
 var choices_timed1 = {
   timeline: [ 
@@ -1144,12 +1323,13 @@ var choices_timed1 = {
       },
       overall_trial_number: () => trial_count_overall+1,
       condition_trial_number: () => trial_count_timed1+1,
-      trial_type: stim_more_timed[trial_count_timed1].type,
-      more_side: randLR3,
-      more_self_amount: stim_more_timed[trial_count_timed1].self_amt,
-      more_other_amount: stim_more_timed[trial_count_timed1].other_amt,
-      less_self_amount: stim_less_timed[trial_count_timed1].self_amt,
-      less_other_amount: stim_less_timed[trial_count_timed1].other_amt,
+      block: () => games[total_trial_order[trial_count_overall]].block,
+      more_side: () => rand4,
+      self_side: () => rand3,
+      more_self_amount: () => games[total_trial_order[trial_count_overall]].selfish_self,
+      more_other_amount: () => games[total_trial_order[trial_count_overall]].selfish_other,
+      less_self_amount: () => games[total_trial_order[trial_count_overall]].prosocial_self,
+      less_other_amount: () => games[total_trial_order[trial_count_overall]].prosocial_other,
       choices: ["F", "J"],
       timing_response: 0,
       doEyeTracking: true,
@@ -1177,12 +1357,13 @@ var choices_timed2 = {
       },
       overall_trial_number: () => trial_count_overall+1,
       condition_trial_number: () => trial_count_timed2+1,
-      trial_type: stim_more_timed[trial_count_timed2+block_length].type,
-      more_side: randLR4,
-      more_self_amount: stim_more_timed[trial_count_timed2+block_length].self_amt,
-      more_other_amount: stim_more_timed[trial_count_timed2+block_length].other_amt,
-      less_self_amount: stim_less_timed[trial_count_timed2+block_length].self_amt,
-      less_other_amount: stim_less_timed[trial_count_timed2+block_length].other_amt,
+      block: () => games[total_trial_order[trial_count_overall]].block,
+      more_side: () => rand4,
+      self_side: () => rand3,
+      more_self_amount: () => games[total_trial_order[trial_count_overall]].selfish_self,
+      more_other_amount: () => games[total_trial_order[trial_count_overall]].selfish_other,
+      less_self_amount: () => games[total_trial_order[trial_count_overall]].prosocial_self,
+      less_other_amount: () => games[total_trial_order[trial_count_overall]].prosocial_other,
       choices: ["F", "J"],
       timing_response: 0,
       doEyeTracking: true,
@@ -1199,10 +1380,6 @@ var choices_timed2 = {
 };
 
 
-//////////////////////
-/** Order of Phases */
-/////////////////////
-
 var block_order = {
   timeline: [
     choices_untimed1,
@@ -1211,6 +1388,7 @@ var block_order = {
     choices_timed2
   ]
 };
+
 
 /***********************/
 /******** Survey *******/
